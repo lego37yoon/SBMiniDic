@@ -1,0 +1,25 @@
+{
+    "manifest_version": 2,
+    "name": "Sinabro MiniDic",
+    "version": "1.0",
+
+    "description": "Unofficial Small Dictionary Add-On based on Daum Dic and kakao i translate service",
+    "author": "paperbox",
+    "homepage_url": "https://github.com/lego37yoon/SBMiniDic",
+    "icons": {
+        "48": "icons.svg",
+        "96": "icons.svg"
+    },
+
+    "browser_action": {
+        "default_icon": "icons.svg",
+        "default_title": "Sinabro MiniDic",
+        "default_popup": "contents/popup.html"
+    },
+    "contents_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["dic.js"]    
+        }
+    ]
+}
