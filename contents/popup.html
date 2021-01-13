@@ -1,9 +1,32 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>시나브로 꼬마사전 설정</title>
         <meta charset="utf-8">
     </head>
+    <style>
+        h3 {
+            margin: 0;
+        }
+    </style>
     <body>
-        
+        <form>
+            <label>카카오 i 번역 API 키 (REST)</label>
+            <input type="text" id="apikey">
+            <br><hr>
+            <h3>플랫폼 설정</h3>
+            <input type="radio" id="dic" checked>
+            <label for="dic">사전</label>
+            <input type="radio" id="translate">
+            <label for="translate">번역</label>
+            <h3>모드 설정</h3>
+            <input type="checkbox" id="dragToFind" checked>
+            <label for="dragToFind">드래그하면 보여주기</label>
+            <br>
+            <input type="checkbox" id="contextToFind">
+            <label for="contextToFind">마우스 오른쪽 클릭 메뉴로 보여주기</label>
+            <br>
+            <button type="submit">저장</button>
+        </form>
     </body>
 </html>

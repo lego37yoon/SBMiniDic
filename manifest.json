@@ -1,9 +1,10 @@
 {
     "manifest_version": 2,
-    "name": "Sinabro MiniDic",
+    "name": "Sinabro Small Dictionary",
     "version": "1.0",
+    "permissions": ["menus", "clipboardWrite"],
 
-    "description": "Unofficial Small Dictionary Add-On based on Daum Dic and kakao i translate service",
+    "description": "Unofficial Dictionary Add-On based on Daum Dictionary and kakao i translate service",
     "author": "paperbox",
     "homepage_url": "https://github.com/lego37yoon/SBMiniDic",
     "icons": {
@@ -11,6 +12,10 @@
         "96": "icons.svg"
     },
 
+    "options_ui": {
+        "page": "contents/popup.html",
+        "browser_style": true
+    },
     "browser_action": {
         "default_icon": "icons.svg",
         "default_title": "Sinabro MiniDic",
@@ -19,7 +24,7 @@
     "contents_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["dic.js"]    
+            "js": ["use.js"]    
         }
     ]
 }
