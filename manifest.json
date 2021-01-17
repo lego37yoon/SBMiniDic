@@ -21,10 +21,8 @@
         "default_title": "Sinabro MiniDic",
         "default_popup": "contents/popup.html"
     },
-    "contents_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "js": ["use.js"]    
-        }
-    ]
+    "content_scripts": [{
+        "js": ["use.js"],
+        "matches": ["<all_urls>"]
+    }]
 }
