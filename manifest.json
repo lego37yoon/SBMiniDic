@@ -16,11 +16,6 @@
         "page": "contents/popup.html",
         "browser_style": true
     },
-    "browser_action": {
-        "default_icon": "icons.svg",
-        "default_title": "Sinabro MiniDic",
-        "default_popup": "contents/popup.html"
-    },
     "content_scripts": [{
         "js": ["use.js"],
         "matches": ["<all_urls>"]

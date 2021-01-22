@@ -1,5 +1,14 @@
+function searchDic(keyword) {
+
+}
+
+function searchTranslation(keyword) {
+    
+}
+
 function showFrame() {
     let userText = window.getSelection().toString().trim();
+    const dicAddress = ""
     //let requestDic = new XMLHttpRequest();
     let dicRawText;
     /* if (userText !== '') {
@@ -14,14 +23,7 @@ function showFrame() {
         requestDic.send();
         console.log('Request Sent');
     } */
-    fetch('https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=lan&q=let')
-    .then(function(response) {
-        console.log(response);
-        dicRawText = response.json();
-    })
-    .catch(function(error) {
-        console.error(error);
-    });
+    
 }
 
 document.addEventListener("mouseup", showFrame);
