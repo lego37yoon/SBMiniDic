@@ -13,7 +13,7 @@
     },
 
     "options_ui": {
-        "page": "contents/popup.html",
+        "page": "contents/settings.html",
         "browser_style": true
     },
     "content_scripts": [{
