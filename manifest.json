@@ -19,5 +19,12 @@
     "content_scripts": [{
         "js": ["use.js"],
         "matches": ["<all_urls>"]
-    }]
+    }],
+
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "sinabroSmallDic@pbdiary.pw",
+            "strict_min_version": "57.0a1"
+        }
+    }
 }
