@@ -13,6 +13,8 @@ function saveValues() {
             })
         }
     }
+
+    console.log(browser.storage.sync.get("apikey"));
 }
 
 document.querySelector("form").addEventListener("submit", saveValues);
