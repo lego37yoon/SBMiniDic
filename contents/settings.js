@@ -1,3 +1,21 @@
+function init() {
+    let savedApiKey = browser.storage.sync.get("apikey");
+    document.getElementById("apikey").value = savedApiKey;
+    let savedDragToFind = browser.storage.sync.get("dragToFind");
+    let savedContextToFind = browser.storage.sync.get("contextToFind");
+    if (savedDragToFind == "on") {
+        document.getElementById("dragToFind").setAttribute("checked");
+    } else {
+        document.getElementById("dragToFind").removeAttribute("checked");
+    }
+    if (savedContextToFind == "on") {
+        document.getElementById("contextToFind").setAttribute("checked");
+    } else {
+        document.getElementById("contextToFind").removeAttribute("checked");
+    }
+    
+}
+
 function saveValues() {
     let appMode = document.getElementsByName('mode');
     
@@ -13,8 +31,6 @@ function saveValues() {
             })
         }
     }
-
-    console.log(browser.storage.sync.get("apikey"));
 }
 
 document.querySelector("form").addEventListener("submit", saveValues);
