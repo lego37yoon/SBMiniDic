@@ -8,12 +8,19 @@
         h3 {
             margin: 0;
         }
+        .caution {
+            color: lightcoral;
+            margin: 0;
+        }
     </style>
     <body onload="init()">
-        <form>
+        <form name="settings">
+            <h2>시나브로 꼬마사전 설정</h2>
+            <h3>API 키</h3>
             <label>카카오 i 번역 API 키 (REST)</label>
             <input type="text" id="apikey">
-            <br><hr>
+            <p class="caution">번역 모드를 사용하려면 API 키가 반드시 필요합니다.</p>
+            <hr>
             <h3>플랫폼 설정</h3>
             <input type="radio" id="dic" name="mode" value="dic" checked>
             <label for="dic">사전</label>
@@ -26,7 +33,8 @@
             <input type="checkbox" id="contextToFind">
             <label for="contextToFind">마우스 오른쪽 클릭 메뉴로 보여주기</label>
             <br>
-            <button type="submit">저장</button>
+            <button type="button" onclick="saveValues()">저장</button>
+            <button type="button" onclick="init()">불러오기</button>
         </form>
         <script src="./settings.js"></script>
     </body>
