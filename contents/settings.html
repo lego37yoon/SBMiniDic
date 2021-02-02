@@ -13,7 +13,7 @@
             margin: 0;
         }
     </style>
-    <body onload="init()">
+    <body>
         <form name="settings">
             <h2>시나브로 꼬마사전 설정</h2>
             <h3>API 키</h3>
@@ -33,8 +33,7 @@
             <input type="checkbox" id="contextToFind">
             <label for="contextToFind">마우스 오른쪽 클릭 메뉴로 보여주기</label>
             <br>
-            <button type="button" onclick="saveValues()">저장</button>
-            <button type="button" onclick="init()">불러오기</button>
+            <button id="saveForm">저장</button>
         </form>
         <script src="./settings.js"></script>
     </body>

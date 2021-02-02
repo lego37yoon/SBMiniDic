@@ -1,31 +1,25 @@
 function init() {
-    console.log("init...");
     let savedApiKey = browser.storage.sync.get("apikey");
     savedApiKey.then((res) => {
         document.getElementById("apikey").value = res.apikey;
     });
-    console.log("(2021.02.01) no error");
 
     let savedDragToFind = browser.storage.sync.get("dragToFind");
     savedDragToFind.then((res) => {
-        console.log(res.dragToFind);
         if (res.dragToFind == true) {
-            console.log("nothing to do.");
+            document.getElementById("dragToFind").checked = true;
         } else {
             document.getElementById("dragToFind").checked = false;
         }
     });
-    console.log("Checked Attribute");
     
     let savedContextToFind = browser.storage.sync.get("contextToFind");
     savedContextToFind.then((res) => {
-        console.log(res.contextToFind);
         if (res.contextToFind == true) {
             document.getElementById("contextToFind").checked = true;
         } else {
             document.getElementById("contextToFind").checked = false;
         }
-        console.log("Checked Attribute");
     }); 
 }
 
@@ -34,15 +28,15 @@ function saveValues() {
     let dragMode;
     let contextMode;
 
-    if (document.getElementById("dragToFind").value != "on" && document.getElementById("contextToFind").value != "on") {
+    if (!document.getElementById("dragToFind").checked && !document.getElementById("contextToFind").checked) {
         alert("최소한 하나 이상의 방법을 선택하세요.");
     } else {
-        if (document.getElementById("dragToFind").value == "on") {
+        if (document.getElementById("dragToFind").checked) {
             dragMode = true;
         } else {
             dragMode = false;
         }
-        if (document.getElementById("contextToFind").value == "on") {
+        if (document.getElementById("contextToFind").checked) {
             contextMode = true;
         } else {
             contextMode = false;
@@ -63,4 +57,5 @@ function saveValues() {
     }
 }
 
-document.querySelector("form").addEventListener("submit", saveValues);
+document.addEventListener("DOMContentLoaded", init);
+document.getElementById("saveForm").addEventListener("click", saveValues);
