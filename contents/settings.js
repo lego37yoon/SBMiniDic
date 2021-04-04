@@ -20,7 +20,18 @@ function init() {
         } else {
             document.getElementById("contextToFind").checked = false;
         }
-    }); 
+    });
+
+    let workMode = browser.storage.sync.get("mode");
+    workMode.then((res) => {
+        if (res.mode == "translate") {
+            document.getElementsByName('mode')[1].checked = true;
+            document.getElementsByName('mode')[0].checked = false;
+        } else {
+            document.getElementsByName('mode')[0].checked = true;
+            document.getElementsByName('mode')[1].checked = false;
+        }
+    })
 }
 
 function saveValues() {
