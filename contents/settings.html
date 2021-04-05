@@ -12,6 +12,20 @@
             color: lightcoral;
             margin: 0;
         }
+        body {
+            color: black;
+            background-color: white;
+        }
+        .disabled {
+            color: gray;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                color: white;
+                background-color: #202023;
+            }
+        }
     </style>
     <body>
         <form name="settings">
@@ -30,8 +44,8 @@
             <input type="checkbox" id="dragToFind" checked>
             <label for="dragToFind">드래그하면 보여주기</label>
             <br>
-            <input type="checkbox" id="contextToFind">
-            <label for="contextToFind">마우스 오른쪽 클릭 메뉴로 보여주기</label>
+            <input type="checkbox" id="contextToFind" disabled>
+            <label for="contextToFind" class="disabled">마우스 오른쪽 클릭 메뉴로 보여주기 (준비중)</label>
             <br>
             <button id="saveForm">저장</button>
         </form>
