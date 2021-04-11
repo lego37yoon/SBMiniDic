@@ -1,37 +1,45 @@
 function init() {
-    let savedApiKey = browser.storage.sync.get("apikey");
-    savedApiKey.then((res) => {
-        document.getElementById("apikey").value = res.apikey;
-    });
+    let savedSettings = browser.storage.sync.get(); //저장된 값 불러오기
+    let srcLangOptionNodes = document.getElementById("srcLang").childNodes;
+    let targetLangOptionNodes = document.getElementById("targetLang").childNodes;
+    let i;
 
-    let savedDragToFind = browser.storage.sync.get("dragToFind");
-    savedDragToFind.then((res) => {
-        if (res.dragToFind == true) {
+    savedSettings.then((values) => {
+        document.getElementById("apikey").value = values.apikey; //번역 API Key 불러오기
+        
+        if (values.dragToFind == true) { //드래그로 단어 찾기 기능 활성화 여부 확인
             document.getElementById("dragToFind").checked = true;
         } else {
             document.getElementById("dragToFind").checked = false;
         }
-    });
-    
-    let savedContextToFind = browser.storage.sync.get("contextToFind");
-    savedContextToFind.then((res) => {
-        if (res.contextToFind == true) {
+
+        if (values.contextToFind == true) { //마우스 오른쪽 클릭 메뉴로 단어 찾기 활성화 여부 확인
             document.getElementById("contextToFind").checked = true;
         } else {
             document.getElementById("contextToFind").checked = false;
         }
-    });
 
-    let workMode = browser.storage.sync.get("mode");
-    workMode.then((res) => {
-        if (res.mode == "translate") {
+        if (values.mode == "translate") { //번역 모드, 사전 모드 확인
             document.getElementsByName('mode')[1].checked = true;
             document.getElementsByName('mode')[0].checked = false;
+            document.getElementsByClassName('translate')[0].style.display = "block";
         } else {
             document.getElementsByName('mode')[0].checked = true;
             document.getElementsByName('mode')[1].checked = false;
         }
-    })
+        
+        for (i = 0; i < srcLangOptionNodes.length; i++) {
+            if (values.srcLang == srcLangOptionNodes[i].value) {
+                srcLangOptionNodes[i].selected = "selected";
+            }
+        }
+
+        for (i = 0; i < targetLangOptionNodes.length; i++) {
+            if (values.targetLang == targetLangOptionNodes[i].value) {
+                targetLangOptionNodes[i].selected = "selected";
+            }
+        } 
+    });
 }
 
 function saveValues() {
@@ -57,7 +65,9 @@ function saveValues() {
     browser.storage.sync.set({
         apikey: document.getElementById("apikey").value,
         dragToFind: dragMode,
-        contextToFind: contextMode
+        contextToFind: contextMode,
+        srcLang: document.getElementById("srcLang").value,
+        targetLang: document.getElementById("targetLang").value
     });
     for (i = 0; i < appMode.length; i++) {
         if (appMode[i].checked) {

@@ -1,5 +1,7 @@
 const suggestUrl = "https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=lan&q=";
 const translateUrl = "https://dapi.kakao.com/v2/translation/translate";
+let srcLang = "kr";
+let targetLang = "en";
 let mouseFrame = document.createElement("div"); //팝업 생성
 mouseFrame.setAttribute("class", "popup");
 document.body.appendChild(mouseFrame);
@@ -47,29 +49,32 @@ function searchDic(keyword) {
 }
 
 function searchTranslation(keyword) {
-    
+    //let isSrcLangSaved = browser.storage.sync.get("")
    
 }
 
 function showFrame(mode, e) {
     let userText = window.getSelection().toString().trim(); //글자 얻어내기
-    mouseFrame.innerHTML = userText;
-    mouseFrame.style.left = e.clientX + "px";
-    mouseFrame.style.top = e.clientY + "px";
-    mouseFrame.style.visibility = "visible";
     
-    if (mode == "dic") {
-        searchDic(userText);
-    } else if (mode == "translate") {
-        searchTranslation(userText);
-    } else {
-        console.log("error occured : mode value is not valid");
-    }
+    if (userText != "") {
+        mouseFrame.style.left = e.clientX + "px";
+        mouseFrame.style.top = e.clientY + "px";
 
+        if (mode == "dic") {
+            searchDic(userText);
+        } else if (mode == "translate") {
+            searchTranslation(userText);
+        } else {
+            console.log("error occured : mode value is not valid");
+        }
+
+        mouseFrame.innerHTML = userText;
+        mouseFrame.style.display = "block";
+    }
 }
 
 function closeOverlay() {
-    mouseFrame.style.visibility = "hidden";
+    mouseFrame.style.display = "none";
 }
 
 document.addEventListener("mouseup", checkMode);

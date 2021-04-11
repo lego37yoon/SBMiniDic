@@ -1,9 +1,9 @@
 .popup {
-    visibility: hidden;
+    display: none;
     color: cornflowerblue;
     background-color: white;
-    border-radius: 10px;
-    border: solid 1px white;
+    border-radius: 5px;
+    border: solid 1px gray;
     padding: 3px;
     position: fixed;
     z-index: 999;
