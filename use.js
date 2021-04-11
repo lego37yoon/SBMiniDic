@@ -1,32 +1,35 @@
 const suggestUrl = "https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=lan&q=";
-const translateUrl = "https://dapi.kakao.com/v2/translation/translate";
+const korSuggestUrl = "https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=kor&q="
+const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힇]/;
+const translateUrl = "https://dapi.kakao.com/v2/translation/translate?query=";
 let srcLang = "kr";
 let targetLang = "en";
+let apiKey = "KakaoAK ";
 let mouseFrame = document.createElement("div"); //팝업 생성
 mouseFrame.setAttribute("class", "popup");
 document.body.appendChild(mouseFrame);
 
 function checkMode(e) {
-    let isDragEnabled = browser.storage.sync.get("dragToFind");
-    let isTranslateMode = browser.storage.sync.get("mode");
-    let currentMode = "dic";
-
-    isTranslateMode.then((res) => { //번역 모드인지, 사전 모드인지 확인
-        if (res.mode == "translate") {
-            currentMode = "translate"; //번역 모드로 지정
-        } else {
-            currentMode = "dic"; //사전 모드로 지정
-        }
-    });
-    isDragEnabled.then((res) => { //드래그하면 보여주기 기능 활성화 여부 확인
-        if (res.dragToFind == true) {
-            showFrame(currentMode, e); //켜져있으면 창 띄우기
-        }
+    let checkSavedValue = browser.storage.sync.get(["dragToFind", "mode"]);
+    
+    checkSavedValue.then((res) => {
+       if (res.mode == "translate") {
+           if (res.dragToFind == true) {
+               showFrame("translate", e);
+           }
+       } else {
+           if (res.dragToFind == true) {
+               showFrame("dic", e);
+           }
+       }
     });
 }
 
 function searchDic(keyword) {    
     let searchUrl = suggestUrl + keyword;
+    if (korean.test(keyword)) {
+        searchUrl = korSuggestUrl + keyword;
+    }
 
     fetch(searchUrl, {
         method: 'GET',
@@ -37,20 +40,34 @@ function searchDic(keyword) {
         redirect: 'follow',
         referrer: 'https://dic.daum.net'
     })
-    .then(function(response) {
-        if (!response.ok) {
-            console.log("Error: code " + response.status);
-        }
-        console.log(response.json().toString);
-        return response.json();
+    .then(response => response.json())
+    .then(result => {
+        mouseFrame.innerHTML = keyword + "<br><p class='meaning'>" + result.items[0].split("|")[2] + "<a href='https://dic.daum.net/search.do?q='" + keyword + "'></a></p>";
     });
 
     
 }
 
 function searchTranslation(keyword) {
-    //let isSrcLangSaved = browser.storage.sync.get("")
-   
+    let savedValues = browser.storage.sync.get(["srcLang", "targetLang", "apikey"]);
+    savedValues.then((res) => {
+        srcLang = res.srcLang;
+        targetLang = res.targetLang;
+        apiKey = apiKey + res.apikey;
+
+        fetch(translateUrl + keyword + "&src_lang=" + srcLang + "&target_lang=" + targetLang, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Authorization': apiKey
+            },
+            redirect: 'follow'
+        })
+        .then(response => response.json())
+        .then(result => {
+            mouseFrame.innerHTML = keyword + "<br><p class='meaning'>" + result.translated_text[0][0] + "</p>";
+        });
+    });
 }
 
 function showFrame(mode, e) {
@@ -61,6 +78,7 @@ function showFrame(mode, e) {
         mouseFrame.style.top = e.clientY + "px";
 
         if (mode == "dic") {
+            console.log("dic");
             searchDic(userText);
         } else if (mode == "translate") {
             searchTranslation(userText);
@@ -68,7 +86,7 @@ function showFrame(mode, e) {
             console.log("error occured : mode value is not valid");
         }
 
-        mouseFrame.innerHTML = userText;
+        
         mouseFrame.style.display = "block";
     }
 }

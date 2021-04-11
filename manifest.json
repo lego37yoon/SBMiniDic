@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Sinabro Small Dictionary",
     "version": "1.0",
-    "permissions": ["storage", "menus", "clipboardWrite"],
+    "permissions": ["storage", "menus", "clipboardWrite", "<all_urls>"],
 
     "description": "Unofficial Dictionary Add-On based on Daum Dictionary and kakao i translate service",
     "author": "paperbox",
