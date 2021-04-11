@@ -17,6 +17,7 @@
         "browser_style": true
     },
     "content_scripts": [{
+        "css": ["popup.css"],
         "js": ["use.js"],
         "matches": ["<all_urls>"]
     }],

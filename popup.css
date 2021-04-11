@@ -1,0 +1,13 @@
+.popup {
+    visibility: hidden;
+    color: cornflowerblue;
+    background-color: white;
+    border-radius: 10px;
+    border: solid 1px white;
+    padding: 3px;
+    position: fixed;
+}
+
+.meaning {
+    color: black;
+}
