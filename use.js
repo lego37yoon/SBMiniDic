@@ -42,7 +42,7 @@ function searchDic(keyword) {
     })
     .then(response => response.json())
     .then(result => {
-        mouseFrame.innerHTML = keyword + "<br><p class='meaning'>" + result.items[0].split("|")[2] + "<a href='https://dic.daum.net/search.do?q='" + keyword + "'></a></p>";
+        mouseFrame.innerHTML = keyword + "<br><p class='meaning'>" + result.items[0].split("|")[2] + "<a href='https://dic.daum.net/search.do?q='" + keyword + "'>더보기</a></p>";
     });
 
     
