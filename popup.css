@@ -6,6 +6,7 @@
     border: solid 1px white;
     padding: 3px;
     position: fixed;
+    z-index: 999;
 }
 
 .meaning {

@@ -43,17 +43,17 @@ function searchDic(keyword) {
         return response.json();
     });
 
-    mouseFrame.innerHTML = userText;
+    
 }
 
 function searchTranslation(keyword) {
     
-    mouseFrame.innerHTML = userText;   
+   
 }
 
 function showFrame(mode, e) {
     let userText = window.getSelection().toString().trim(); //글자 얻어내기
-    
+    mouseFrame.innerHTML = userText;
     mouseFrame.style.left = e.clientX + "px";
     mouseFrame.style.top = e.clientY + "px";
     mouseFrame.style.visibility = "visible";
