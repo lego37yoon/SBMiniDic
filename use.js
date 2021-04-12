@@ -14,6 +14,7 @@ let br = document.createElement("br");
 wordElement.setAttribute("class", "word");
 meaning.setAttribute("class", "meaning");
 readMore.textContent = "더보기";
+readMore.setAttribute("class", "readMore");
 mouseFrame.setAttribute("class", "popup");
 document.body.appendChild(mouseFrame);
 
