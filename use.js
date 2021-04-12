@@ -6,8 +6,14 @@ let srcLang = "kr";
 let targetLang = "en";
 let apiKey = "KakaoAK ";
 let mouseFrame = document.createElement("div"); //팝업 생성
-let meaning = document.createElement('p'); //p 요소 생성
-meaning.setAttribute("class", "word");
+let wordElement = document.createElement("p"); //p 요소 생성
+let meaning = document.createElement("span");
+let readMore = document.createElement("a");
+let br = document.createElement("br");
+
+wordElement.setAttribute("class", "word");
+meaning.setAttribute("class", "meaning");
+readMore.textContent = "더보기";
 mouseFrame.setAttribute("class", "popup");
 document.body.appendChild(mouseFrame);
 
@@ -46,8 +52,14 @@ function searchDic(keyword) {
     .then(result => {
         for (let i = 0; i < result.items.length; i++) {
             if (keyword == result.items[i].split("|")[1]) {
-                meaning.innerHTML = keyword + "<br><span class='meaning'>" + result.items[i].split("|")[2] + "<a href='https://dic.daum.net/search.do?q=" + keyword + "'>더보기</a></span>";
-                mouseFrame.appendChild(meaning)
+                wordElement.textContent = keyword;
+                meaning.textContent = result.items[i].split("|")[2];
+                readMore.setAttribute("href", "https://dic.daum.net/search.do?q=" + keyword);
+
+                wordElement.appendChild(br);
+                meaning.appendChild(readMore);
+                wordElement.appendChild(meaning);
+                mouseFrame.appendChild(wordElement)
             }
         }
         //mouseFrame.innerHTML = keyword + "<br><p class='meaning'>" + result.items[0].split("|")[2] + "<a href='https://dic.daum.net/search.do?q=" + keyword + "'>더보기</a></p>";
@@ -61,7 +73,7 @@ function searchTranslation(keyword) {
     savedValues.then((res) => {
         srcLang = res.srcLang;
         targetLang = res.targetLang;
-        apiKey = apiKey + res.apikey;
+        apiKey = "KakaoAK " + res.apikey;
 
         fetch(translateUrl + keyword + "&src_lang=" + srcLang + "&target_lang=" + targetLang, {
             method: 'GET',
@@ -73,7 +85,16 @@ function searchTranslation(keyword) {
         })
         .then(response => response.json())
         .then(result => {
-            mouseFrame.innerHTML = keyword + "<br><p class='meaning'>" + result.translated_text[0][0] + "</p>";
+            wordElement.textContent = keyword;
+            if (result.translated_text == undefined) {
+                meaning.textContent = "오류가 발생하였습니다: " + result.message;
+            } else {
+                meaning.textContent = result.translated_text[0][0];
+            }
+            
+            wordElement.appendChild(br);
+            wordElement.appendChild(meaning);
+            mouseFrame.appendChild(wordElement);
         });
     });
 }
@@ -86,7 +107,6 @@ function showFrame(mode, e) {
         mouseFrame.style.top = e.clientY + "px";
 
         if (mode == "dic") {
-            console.log("dic");
             searchDic(userText);
         } else if (mode == "translate") {
             searchTranslation(userText);
@@ -94,7 +114,6 @@ function showFrame(mode, e) {
             console.log("error occured : mode value is not valid");
         }
 
-        
         mouseFrame.style.display = "block";
     }
 }

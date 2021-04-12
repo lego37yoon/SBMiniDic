@@ -78,5 +78,15 @@ function saveValues() {
     }
 }
 
+function showMenu() {
+    document.getElementsByClassName('translate')[0].style.display = "block";
+}
+
+function hideMenu() {
+    document.getElementsByClassName('translate')[0].style.display = "none";
+}
+
 document.addEventListener("DOMContentLoaded", init);
 document.getElementById("saveForm").addEventListener("click", saveValues);
+document.getElementById("translate").addEventListener("click", showMenu);
+document.getElementById("dic").addEventListener("click", hideMenu);
