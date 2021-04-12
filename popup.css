@@ -1,6 +1,5 @@
 .popup {
     display: none;
-    color: cornflowerblue;
     background-color: white;
     border-radius: 5px;
     border: solid 1px gray;
@@ -9,6 +8,15 @@
     z-index: 999;
 }
 
+.word {
+    color: cornflowerblue;
+}
+
 .meaning {
     color: black;
+}
+
+a {
+    color: gray;
+    margin-left: 5px;
 }

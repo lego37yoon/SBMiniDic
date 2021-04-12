@@ -6,6 +6,8 @@ let srcLang = "kr";
 let targetLang = "en";
 let apiKey = "KakaoAK ";
 let mouseFrame = document.createElement("div"); //팝업 생성
+let meaning = document.createElement('p'); //p 요소 생성
+meaning.setAttribute("class", "word");
 mouseFrame.setAttribute("class", "popup");
 document.body.appendChild(mouseFrame);
 
@@ -42,7 +44,13 @@ function searchDic(keyword) {
     })
     .then(response => response.json())
     .then(result => {
-        mouseFrame.innerHTML = keyword + "<br><p class='meaning'>" + result.items[0].split("|")[2] + "<a href='https://dic.daum.net/search.do?q='" + keyword + "'>더보기</a></p>";
+        for (let i = 0; i < result.items.length; i++) {
+            if (keyword == result.items[i].split("|")[1]) {
+                meaning.innerHTML = keyword + "<br><span class='meaning'>" + result.items[i].split("|")[2] + "<a href='https://dic.daum.net/search.do?q=" + keyword + "'>더보기</a></span>";
+                mouseFrame.appendChild(meaning)
+            }
+        }
+        //mouseFrame.innerHTML = keyword + "<br><p class='meaning'>" + result.items[0].split("|")[2] + "<a href='https://dic.daum.net/search.do?q=" + keyword + "'>더보기</a></p>";
     });
 
     
@@ -96,4 +104,4 @@ function closeOverlay() {
 }
 
 document.addEventListener("mouseup", checkMode);
-document.addEventListener("mousedown", closeOverlay);
+mouseFrame.addEventListener("mouseleave", closeOverlay);
