@@ -23,4 +23,6 @@ Firefox 브라우저 57+ (Windows, macOS, Linux)
 
 WebExtensions 포맷이므로 이전의 XUL 기반 플러그인만 지원하는 Firefox 기반 변종 브라우저 및 Firefox 구 버전은 지원하지 않습니다.
 
-Firefox Add-ons에 등록되면 README 파일에 다시 안내드리겠습니다.
+### 내려받기
+
+Firefox Add-Ons: [Sinabro Small Dictionary](https://addons.mozilla.org/ko/firefox/addon/sinabro-small-dictionary/)
