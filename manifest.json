@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Sinabro Small Dictionary",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "permissions": ["storage", "menus", "clipboardWrite", "<all_urls>"],
 
     "description": "Unofficial Dictionary Add-On based on Daum Dictionary and kakao i translate service",

@@ -11,11 +11,11 @@ let meaning = document.createElement("span");
 let readMore = document.createElement("a");
 let br = document.createElement("br");
 
-wordElement.setAttribute("class", "word");
-meaning.setAttribute("class", "meaning");
+wordElement.setAttribute("class", "sinabroMiniDicWord");
+meaning.setAttribute("class", "sinabroMiniDicMeaning");
 readMore.textContent = "더보기";
-readMore.setAttribute("class", "readMore");
-mouseFrame.setAttribute("class", "popup");
+readMore.setAttribute("class", "sinabroMiniDicReadMore");
+mouseFrame.setAttribute("class", "sinabroMiniDicPopup");
 document.body.appendChild(mouseFrame);
 
 function checkMode(e) {

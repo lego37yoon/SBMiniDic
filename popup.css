@@ -1,4 +1,4 @@
-.popup {
+.sinabroMiniDicPopup {
     display: none;
     background-color: white;
     border-radius: 5px;
@@ -8,15 +8,15 @@
     z-index: 999;
 }
 
-.word {
+.sinabroMiniDicWord {
     color: cornflowerblue;
 }
 
-.meaning {
+.sinabroMiniDicMeaning {
     color: black;
 }
 
-.readMore {
+.sinabroMiniDicReadMore {
     color: gray;
     margin-left: 5px;
 }
