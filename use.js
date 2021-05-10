@@ -103,7 +103,7 @@ function searchTranslation(keyword) {
 function showFrame(mode, e) {
     let userText = window.getSelection().toString().trim(); //글자 얻어내기
     
-    if (userText != "") {
+    if (userText != "" && userText != " ") {
         mouseFrame.style.left = e.clientX + "px";
         mouseFrame.style.top = e.clientY + "px";
 

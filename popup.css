@@ -1,8 +1,33 @@
+@font-face {
+    font-family: 'NanumBarunGothic';
+    font-style: normal;
+    font-weight: 300;
+    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.eot');
+    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'RIDIBatang';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.sinabroMiniDicSansSerif {
+    font-family: 'NanumBarunGothic', sans-serif;
+}
+
+.sinabroMiniDicSerif {
+    font-family: 'RIDIBatang', serif;
+}
+   
+
 .sinabroMiniDicPopup {
     display: none;
     background-color: white;
-    border-radius: 5px;
     border: solid 1px gray;
+    box-shadow: 1px 1px 1px gray;
+    font-size: 12px;
     padding: 3px;
     position: fixed;
     z-index: 999;
