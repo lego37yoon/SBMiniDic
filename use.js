@@ -61,6 +61,8 @@ function searchDic(keyword) {
                 meaning.appendChild(readMore);
                 wordElement.appendChild(meaning);
                 mouseFrame.appendChild(wordElement)
+
+                mouseFrame.style.display = "block";
             }
         }
         //mouseFrame.innerHTML = keyword + "<br><p class='meaning'>" + result.items[0].split("|")[2] + "<a href='https://dic.daum.net/search.do?q=" + keyword + "'>더보기</a></p>";
@@ -96,6 +98,8 @@ function searchTranslation(keyword) {
             wordElement.appendChild(br);
             wordElement.appendChild(meaning);
             mouseFrame.appendChild(wordElement);
+
+            mouseFrame.style.display = "block";
         });
     });
 }
@@ -114,8 +118,6 @@ function showFrame(mode, e) {
         } else {
             console.log("error occured : mode value is not valid");
         }
-
-        mouseFrame.style.display = "block";
     }
 }
 
