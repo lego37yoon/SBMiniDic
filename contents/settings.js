@@ -80,10 +80,12 @@ function saveValues() {
 
 function showMenu() {
     document.getElementsByClassName('translate')[0].style.display = "block";
+    document.getElementsByClassName('dic')[0].style.display = "none";
 }
 
 function hideMenu() {
     document.getElementsByClassName('translate')[0].style.display = "none";
+    document.getElementsByClassName('dic')[0].style.display = "block";
 }
 
 document.addEventListener("DOMContentLoaded", init);
