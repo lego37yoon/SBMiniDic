@@ -1,8 +1,8 @@
 @font-face {
-    font-family: 'NanumBarunGothic';
+    font-family: 'NanumSquare';
     font-style: normal;
-    font-weight: 300;
-    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.eot');
+    font-weight: 400;
+    src: url('https://cdn.rawgit.com/moonspam/NanumSquare/master/NanumSquareR.woff') format('woff');
 }
 
 @font-face {
@@ -13,11 +13,11 @@
 }
 
 .sinabroMiniDicSansSerif {
-    font-family: 'NanumBarunGothic', sans-serif;
+    font-family: 'NanumSquare', sans-serif !important;
 }
 
 .sinabroMiniDicSerif {
-    font-family: 'RIDIBatang', serif;
+    font-family: 'RIDIBatang', serif !important;
 }
    
 

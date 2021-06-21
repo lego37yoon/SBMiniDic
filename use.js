@@ -15,7 +15,6 @@ wordElement.setAttribute("class", "sinabroMiniDicWord");
 meaning.setAttribute("class", "sinabroMiniDicMeaning");
 readMore.textContent = "더보기";
 readMore.setAttribute("class", "sinabroMiniDicReadMore");
-mouseFrame.setAttribute("class", "sinabroMiniDicPopup");
 document.body.appendChild(mouseFrame);
 
 function checkMode(e) {
@@ -106,7 +105,17 @@ function searchTranslation(keyword) {
 
 function showFrame(mode, e) {
     let userText = window.getSelection().toString().trim(); //글자 얻어내기
+    let customizedFont = browser.storage.sync.get(["fontSize", "fontMode"]);
     
+    customizedFont.then((res) => {
+        mouseFrame.style.fontSize = res.fontSize + 'px';
+        if (res.fontMode == "serif") {
+            mouseFrame.setAttribute("class", "sinabroMiniDicPopup sinabroMiniDicSerif");
+        } else {
+            mouseFrame.setAttribute("class", "sinabroMiniDicPopup sinabroMiniDicSansSerif");
+        }
+    });
+
     if (userText != "" && userText != " ") {
         mouseFrame.style.left = e.clientX + "px";
         mouseFrame.style.top = e.clientY + "px";
