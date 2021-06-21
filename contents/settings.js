@@ -2,11 +2,14 @@ function init() {
     let savedSettings = browser.storage.sync.get(); //저장된 값 불러오기
     let srcLangOptionNodes = document.getElementById("srcLang").childNodes;
     let targetLangOptionNodes = document.getElementById("targetLang").childNodes;
+    let krDicNodes = document.getElementById("krDicMode").childNodes;
+    let enDicNodes = document.getElementById("enDicMode").childNodes;
     let i;
 
     savedSettings.then((values) => {
         document.getElementById("apikey").value = values.apikey; //번역 API Key 불러오기
         
+        //기능 설정
         if (values.dragToFind == true) { //드래그로 단어 찾기 기능 활성화 여부 확인
             document.getElementById("dragToFind").checked = true;
         } else {
@@ -20,30 +23,58 @@ function init() {
         }
 
         if (values.mode == "translate") { //번역 모드, 사전 모드 확인
-            document.getElementsByName('mode')[1].checked = true;
-            document.getElementsByName('mode')[0].checked = false;
+            document.getElementsByName('mode')[1].checked = true; //번역
+            document.getElementsByName('mode')[0].checked = false; //사전
             document.getElementsByClassName('translate')[0].style.display = "block";
         } else {
             document.getElementsByName('mode')[0].checked = true;
             document.getElementsByName('mode')[1].checked = false;
         }
-        
-        for (i = 0; i < srcLangOptionNodes.length; i++) {
-            if (values.srcLang == srcLangOptionNodes[i].value) {
-                srcLangOptionNodes[i].selected = "selected";
+
+        //사전 설정
+        for (i = 0; i < krDicNodes.length; i++) {
+            if (values.krDicMode == krDicNodes[i].value) {
+                krDicNodes[i].selected = true;
+            }
+        }
+        for (i = 0; i < enDicNodes.length; i++) {
+            if (values.enDicMode == enDicNodes[i].value) {
+                enDicNodes[i].selected = true;
             }
         }
 
-        for (i = 0; i < targetLangOptionNodes.length; i++) {
-            if (values.targetLang == targetLangOptionNodes[i].value) {
-                targetLangOptionNodes[i].selected = "selected";
+        //번역 설정
+        for (i = 0; i < srcLangOptionNodes.length; i++) { //번역 대상 언어 저장된 값 지정
+            if (values.srcLang == srcLangOptionNodes[i].value) {
+                srcLangOptionNodes[i].selected = true;
             }
-        } 
+        }
+
+        for (i = 0; i < targetLangOptionNodes.length; i++) { //결과물 언어 저장된 값 지정
+            if (values.targetLang == targetLangOptionNodes[i].value) {
+                targetLangOptionNodes[i].selected = true;
+            }
+        }
+
+        //모양새 설정
+        if (values.fontSize != null) {
+            document.getElementById("popupFontSize").value = values.fontSize;
+        }
+        
+        if (values.fontMode == "serif") { 
+            document.getElementsByName('fontMode')[0].checked = true; //리디바탕
+            document.getElementsByName('fontMode')[1].checked = false; //나눔바른고딕
+        } else {
+            document.getElementsByName('fontMode')[0].checked = false;
+            document.getElementsByName('fontMode')[1].checked = true;
+        }
+
     });
 }
 
 function saveValues() {
     let appMode = document.getElementsByName('mode');
+    let fontMode = document.getElementsByName('fontMode');
     let dragMode;
     let contextMode;
 
@@ -62,17 +93,27 @@ function saveValues() {
         }    
     }
     
-    browser.storage.sync.set({
-        apikey: document.getElementById("apikey").value,
-        dragToFind: dragMode,
-        contextToFind: contextMode,
-        srcLang: document.getElementById("srcLang").value,
-        targetLang: document.getElementById("targetLang").value
+    browser.storage.sync.set({ //저장
+        apikey: document.getElementById("apikey").value, //카카오 번역 API 키
+        dragToFind: dragMode, //드래그하여 찾기 기능 활성화 여부
+        contextToFind: contextMode, //오른쪽 클릭 메뉴 활성화 여부
+        srcLang: document.getElementById("srcLang").value, //번역 대상 언어
+        targetLang: document.getElementById("targetLang").value, //번역 결과 언어
+        krDicMode: document.getElementById("krDicMode").value, //한국어 사전 모드
+        enDicMode: document.getElementById("enDicMode").value, //영어 사전 모드
+        fontSize: document.getElementById("popupFontSize").value //글꼴 크기
     });
     for (i = 0; i < appMode.length; i++) {
         if (appMode[i].checked) {
             browser.storage.sync.set({
                 mode: appMode[i].value
+            });
+        }
+    }
+    for (i = 0; i < fontMode.length; i++) {
+        if (fontMode[i].checked) {
+            browser.storage.sync.set({
+                fontMode: fontMode[i].value
             });
         }
     }
