@@ -2,6 +2,7 @@ const suggestUrl = "https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_ou
 const korSuggestUrl = "https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=kor&q="
 const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힇]/;
 const translateUrl = "https://dapi.kakao.com/v2/translation/translate?query=";
+const detectUrl = "https://dapi.kakao.com/v3/translation/language/detect?query=";
 let srcLang = "kr";
 let targetLang = "en";
 let apiKey = "KakaoAK ";
@@ -66,14 +67,32 @@ function searchDic(keyword) {
         }
         //mouseFrame.innerHTML = keyword + "<br><p class='meaning'>" + result.items[0].split("|")[2] + "<a href='https://dic.daum.net/search.do?q=" + keyword + "'>더보기</a></p>";
     });
-
-    
 }
 
 function searchTranslation(keyword) {
     let savedValues = browser.storage.sync.get(["srcLang", "targetLang", "apikey"]);
     savedValues.then((res) => {
-        srcLang = res.srcLang;
+        if (res.srcLang == "auto") {
+            fetch(detectUrl + keyword, {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Authorization': apiKey
+                },
+                redirect: 'follow'
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.code[0] == "N/A") {
+                    srcLang = res.srcLang;
+                } else {
+                    console.log(result.code[0]);
+                    srcLang = result.code[0];
+                }
+            });
+        } else {
+            srcLang = res.srcLang;
+        }
         targetLang = res.targetLang;
         apiKey = "KakaoAK " + res.apikey;
 
