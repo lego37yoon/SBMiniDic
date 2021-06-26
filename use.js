@@ -11,6 +11,7 @@ let wordElement = document.createElement("p"); //p 요소 생성
 let meaning = document.createElement("span");
 let readMore = document.createElement("a");
 let br = document.createElement("br");
+let i = 0;
 
 wordElement.setAttribute("class", "sinabroMiniDicWord");
 meaning.setAttribute("class", "sinabroMiniDicMeaning");
@@ -51,7 +52,7 @@ function searchDic(keyword) {
     })
     .then(response => response.json())
     .then(result => {
-        for (let i = 0; i < result.items.length; i++) {
+        for (i = 0; i < result.items.length; i++) {
             if (keyword == result.items[i].split("|")[1]) {
                 wordElement.textContent = keyword;
                 meaning.textContent = result.items[i].split("|")[2];
@@ -69,57 +70,68 @@ function searchDic(keyword) {
     });
 }
 
-function searchTranslation(keyword) {
-    let savedValues = browser.storage.sync.get(["srcLang", "targetLang", "apikey"]);
-    savedValues.then((res) => {
-        if (res.srcLang == "auto") {
-            fetch(detectUrl + keyword, {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    'Authorization': apiKey
-                },
-                redirect: 'follow'
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.code[0] == "N/A") {
-                    srcLang = res.srcLang;
-                } else {
-                    console.log(result.code[0]);
-                    srcLang = result.code[0];
-                }
-            });
-        } else {
-            srcLang = res.srcLang;
-        }
-        targetLang = res.targetLang;
-        apiKey = "KakaoAK " + res.apikey;
+async function searchTranslation(keyword) {
+    let res = await browser.storage.sync.get(["srcLang", "targetLang", "apikey"]);
+    
+    apiKey = "KakaoAK " + res.apikey; //API 키 설정
 
-        fetch(translateUrl + keyword + "&src_lang=" + srcLang + "&target_lang=" + targetLang, {
+    if (res.srcLang == "auto") { //자동 감지 기능 사용 시
+        let detectResponse = await fetch(detectUrl + keyword, {
             method: 'GET',
             mode: 'cors',
             headers: {
                 'Authorization': apiKey
             },
             redirect: 'follow'
-        })
-        .then(response => response.json())
-        .then(result => {
-            wordElement.textContent = keyword;
-            if (result.translated_text == undefined) {
-                meaning.textContent = "오류가 발생하였습니다: " + result.message;
-            } else {
-                meaning.textContent = result.translated_text[0][0];
-            }
-            
-            wordElement.appendChild(br);
-            wordElement.appendChild(meaning);
-            mouseFrame.appendChild(wordElement);
-
-            mouseFrame.style.display = "block";
         });
+        let detectResult = await detectResponse.json();
+
+        if (detectResult['language_info'][0]['code'] == "N/A") {
+            srcLang = "en";
+        } else {
+            srcLang = detectResult['language_info'][0]['code'];
+        }
+    } else { //그게 아니면 데이터 저장된 값 사용
+        srcLang = res.srcLang;
+    }
+
+
+    if (srcLang == "kr" && res.targetLang == "kr") { //원본->번역 모두 한국어면 결과 언어는 영어로=
+        targetLang = "en";
+    } else if (srcLang == res.targetLang) { //원본->번역 모두 한국어 이외의 동일 언어면 결과 언어는 한국어
+        targetLang = "kr";
+    } else { //별 문제 없다면 저장된 원본 언어로
+        targetLang = res.targetLang;
+    }
+
+    let translateResponse = await fetch(translateUrl + keyword + "&src_lang=" + srcLang + "&target_lang=" + targetLang, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Authorization': apiKey
+        },
+        redirect: 'follow'
     });
+    let translateResult = await translateResponse.json();
+    console.log(translateResult);
+    
+    wordElement.textContent = keyword;
+    if (translateResult.translated_text == undefined) {
+        meaning.textContent = "오류가 발생하였습니다: " + translateResult.message;
+    } else {
+        meaning.textContent = translateResult.translated_text[0][0];
+        if (translateResult.translated_text[0].length > 1) {
+            for (i = 1; i < result.translated_text[0].length; i++) {
+                meaning.textContent += result.translated_text[0][i];
+            }    
+        }
+    }
+        
+    wordElement.appendChild(br);
+    wordElement.appendChild(meaning);
+    mouseFrame.appendChild(wordElement);
+
+    mouseFrame.style.display = "block";
 }
 
 function showFrame(mode, e) {
