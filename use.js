@@ -20,9 +20,11 @@ readMore.setAttribute("class", "sinabroMiniDicReadMore");
 document.body.appendChild(mouseFrame);
 
 function checkMode(e) {
-    let checkSavedValue = browser.storage.sync.get(["dragToFind", "mode"]);
+    let checkSavedValue = browser.storage.sync.get(["dragToFind", "mode", "fontSize"]);
     
     checkSavedValue.then((res) => {
+        mouseFrame.setAttribute("style", "font-size: " + res.fontSize + "px;"); //글꼴 크기 지정
+
        if (res.mode == "translate") {
            if (res.dragToFind == true) {
                showFrame("translate", e);
