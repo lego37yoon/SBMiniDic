@@ -2,12 +2,12 @@
     font-family: 'NanumSquare';
     font-style: normal;
     font-weight: 400;
-    src: url('https://cdn.rawgit.com/moonspam/NanumSquare/master/NanumSquareR.woff') format('woff');
+    src: url('moz-extension://__MSG_@@extension_id__/resources/NanumSquareR.woff') format('woff');
 }
 
 @font-face {
     font-family: 'RIDIBatang';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+    src: url('moz-extension://__MSG_@@extension_id__/resources/RIDIBatang.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
@@ -33,11 +33,12 @@
 
 .sinabroMiniDicWord {
     color: cornflowerblue;
-    margin: 0;
+    margin: 0 !important;
 }
 
 .sinabroMiniDicMeaning {
     color: black;
+    margin: 3px 0 0 0 !important;
 }
 
 .sinabroMiniDicReadMore {

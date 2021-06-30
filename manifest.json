@@ -22,6 +22,11 @@
         "matches": ["<all_urls>"]
     }],
 
+    "web_accessible_resources": [
+        "resources/NanumSquareR.woff",
+        "resources/RIDIBatang.woff"
+    ],
+
     "browser_specific_settings": {
         "gecko": {
             "id": "sinabroSmallDic@pbdiary.pw",

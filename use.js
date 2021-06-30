@@ -20,11 +20,10 @@ readMore.setAttribute("class", "sinabroMiniDicReadMore");
 document.body.appendChild(mouseFrame);
 
 function checkMode(e) {
-    let checkSavedValue = browser.storage.sync.get(["dragToFind", "mode", "fontSize"]);
+    let checkSavedValue = browser.storage.sync.get(["dragToFind", "mode"]);
     
     checkSavedValue.then((res) => {
-        mouseFrame.setAttribute("style", "font-size: " + res.fontSize + "px;"); //글꼴 크기 지정
-
+       
        if (res.mode == "translate") {
            if (res.dragToFind == true) {
                showFrame("translate", e);
@@ -123,8 +122,8 @@ async function searchTranslation(keyword) {
     } else {
         meaning.textContent = translateResult.translated_text[0][0];
         if (translateResult.translated_text[0].length > 1) {
-            for (i = 1; i < result.translated_text[0].length; i++) {
-                meaning.textContent += result.translated_text[0][i];
+            for (i = 1; i < translateResult.translated_text[0].length; i++) {
+                meaning.textContent += translateResult.translated_text[0][i];
             }    
         }
     }
@@ -141,7 +140,7 @@ function showFrame(mode, e) {
     let customizedFont = browser.storage.sync.get(["fontSize", "fontMode"]);
     
     customizedFont.then((res) => {
-        mouseFrame.style.fontSize = res.fontSize + 'px';
+        mouseFrame.style.fontSize = res.fontSize + 'pt';
         if (res.fontMode == "serif") {
             mouseFrame.setAttribute("class", "sinabroMiniDicPopup sinabroMiniDicSerif");
         } else {
