@@ -91,7 +91,7 @@ function saveValues() {
             contextMode = true;
         } else {
             contextMode = false;
-        }    
+        }
     }
     
     browser.storage.sync.set({ //저장
