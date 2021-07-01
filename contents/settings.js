@@ -29,6 +29,7 @@ function init() {
         } else {
             document.getElementsByName('mode')[0].checked = true;
             document.getElementsByName('mode')[1].checked = false;
+            document.getElementsByClassName('dic')[0].style.display = "block";
         }
 
         //사전 설정

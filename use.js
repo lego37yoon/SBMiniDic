@@ -1,6 +1,11 @@
 const suggestUrl = "https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=lan&q=";
 const korSuggestUrl = "https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=kor&q="
+const engSuggestUrl = "https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=ene&q=";
+const korengSuggestUrl = "https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=eng&q=";
+//const korjpnSuggestUrl = "";
+//const korchnSuggestUrl = "";
 const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힇]/;
+const english = /[a-z|A-Z]/;
 const translateUrl = "https://dapi.kakao.com/v2/translation/translate?query=";
 const detectUrl = "https://dapi.kakao.com/v3/translation/language/detect?query=";
 let srcLang = "kr";
@@ -36,13 +41,27 @@ function checkMode(e) {
     });
 }
 
-function searchDic(keyword) {    
+async function searchDic(keyword) {
     let searchUrl = suggestUrl + keyword;
-    if (korean.test(keyword)) {
-        searchUrl = korSuggestUrl + keyword;
+    let dictionaryMode = await browser.storage.sync.get(["krDicMode", "enDicMode"]);
+    if (korean.test(keyword)) { //사전 자동 전환 기능 (한국어)
+        if (dictionaryMode.krDicMode = "kr") {
+            searchUrl = korSuggestUrl + keyword;
+        }
+        else if (dictionaryMode.krDicMode = "en") {
+            searchUrl = engSuggestUrl + keyword;
+        }
     }
 
-    fetch(searchUrl, {
+    if (english.test(keyword)) { //사전 자동 전환 기능 (영어)
+        if (dictionaryMode.enDicMode = "kr") {
+            searchUrl = korengSuggestUrl + keyword;
+        } else {
+            searchUrl = engSuggestUrl + keyword;
+        }
+    }
+
+    let dicResponse = await fetch(searchUrl, {
         method: 'GET',
         mode: 'cors',
         headers: {
@@ -51,24 +70,24 @@ function searchDic(keyword) {
         redirect: 'follow',
         referrer: 'https://dic.daum.net'
     })
-    .then(response => response.json())
-    .then(result => {
-        for (i = 0; i < result.items.length; i++) {
-            if (keyword == result.items[i].split("|")[1]) {
-                wordElement.textContent = keyword;
-                meaning.textContent = result.items[i].split("|")[2];
-                readMore.setAttribute("href", "https://dic.daum.net/search.do?q=" + keyword);
 
-                wordElement.appendChild(br);
-                meaning.appendChild(readMore);
-                wordElement.appendChild(meaning);
-                mouseFrame.appendChild(wordElement)
+    let dicResult = await dicResponse.json();
+    
+    for (i = 0; i < dicResult.items.length; i++) {
+        if (keyword == dicResult.items[i].split("|")[1]) {
+            wordElement.textContent = keyword;
+            meaning.textContent = dicResult.items[i].split("|")[2];
+            readMore.setAttribute("href", "https://dic.daum.net/search.do?q=" + keyword);
 
-                mouseFrame.style.display = "block";
-            }
+            wordElement.appendChild(br);
+            meaning.appendChild(readMore);
+            wordElement.appendChild(meaning);
+            mouseFrame.appendChild(wordElement)
+
+            mouseFrame.style.display = "block";
         }
-        //mouseFrame.innerHTML = keyword + "<br><p class='meaning'>" + result.items[0].split("|")[2] + "<a href='https://dic.daum.net/search.do?q=" + keyword + "'>더보기</a></p>";
-    });
+    }
+    //mouseFrame.innerHTML = keyword + "<br><p class='meaning'>" + result.items[0].split("|")[2] + "<a href='https://dic.daum.net/search.do?q=" + keyword + "'>더보기</a></p>";
 }
 
 async function searchTranslation(keyword) {
@@ -97,7 +116,7 @@ async function searchTranslation(keyword) {
     }
 
 
-    if (srcLang == "kr" && res.targetLang == "kr") { //원본->번역 모두 한국어면 결과 언어는 영어로=
+    if (srcLang == "kr" && res.targetLang == "kr") { //원본->번역 모두 한국어면 결과 언어는 영어로
         targetLang = "en";
     } else if (srcLang == res.targetLang) { //원본->번역 모두 한국어 이외의 동일 언어면 결과 언어는 한국어
         targetLang = "kr";

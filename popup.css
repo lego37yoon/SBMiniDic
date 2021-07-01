@@ -1,14 +1,12 @@
 @font-face {
     font-family: 'NanumSquare';
     font-style: normal;
-    font-weight: 400;
     src: url('moz-extension://__MSG_@@extension_id__/resources/NanumSquareR.woff') format('woff');
 }
 
 @font-face {
     font-family: 'RIDIBatang';
     src: url('moz-extension://__MSG_@@extension_id__/resources/RIDIBatang.woff') format('woff');
-    font-weight: normal;
     font-style: normal;
 }
 
