@@ -1,7 +1,7 @@
-const suggestUrl = "https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=lan&q=";
-const korSuggestUrl = "https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=kor&q="
-const engSuggestUrl = "https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=ene&q=";
-const korengSuggestUrl = "https://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=eng&q=";
+const suggestUrl = "https://suggest.dic.daum.net/language/v1/search.json?cate=lan&q=";
+const korSuggestUrl = "https://suggest.dic.daum.net/language/v1/search.json?cate=kor&q="
+const engSuggestUrl = "https://suggest.dic.daum.net/language/v1/search.json?cate=ene&q=";
+const korengSuggestUrl = "https://suggest.dic.daum.net/language/v1/search.json?cate=eng&q=";
 //const korjpnSuggestUrl = "";
 //const korchnSuggestUrl = "";
 const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힇]/;
@@ -44,39 +44,56 @@ function checkMode(e) {
 async function searchDic(keyword) {
     let searchUrl = suggestUrl + keyword;
     let dictionaryMode = await browser.storage.sync.get(["krDicMode", "enDicMode"]);
+    let searchMode = "lan";
+
     if (korean.test(keyword)) { //사전 자동 전환 기능 (한국어)
         if (dictionaryMode.krDicMode = "kr") {
             searchUrl = korSuggestUrl + keyword;
+            searchMode = "kor";
         }
         else if (dictionaryMode.krDicMode = "en") {
             searchUrl = engSuggestUrl + keyword;
+            searchMode = "eng";
         }
     }
 
     if (english.test(keyword)) { //사전 자동 전환 기능 (영어)
         if (dictionaryMode.enDicMode = "kr") {
             searchUrl = korengSuggestUrl + keyword;
+            searchMode = "eng";
         } else {
             searchUrl = engSuggestUrl + keyword;
+            searchMode = "ene";
         }
     }
 
     let dicResponse = await fetch(searchUrl, {
         method: 'GET',
-        mode: 'cors',
+        mode: 'no-cors',
         headers: {
             'Content-Type': 'application/json',
         },
         redirect: 'follow',
+        host: 'suggest.dic.daum.net',
         referrer: 'https://dic.daum.net'
     })
 
     let dicResult = await dicResponse.json();
+    dicResult = dicResult.items;
     
-    for (i = 0; i < dicResult.items.length; i++) {
-        if (keyword == dicResult.items[i].split("|")[1]) {
+    if (searchMode == "eng")
+        dicResult = dicResult.eng;
+    else if (searchMode == "ene")
+        dicResult = dicResult.ene;
+    else
+        dicResult = dicResult.lan;
+
+    console.log(dicResult);
+
+    for (i = 0; i < dicResult.length; i++) {
+        if (keyword == dicResult[i].key) {
             wordElement.textContent = keyword;
-            meaning.textContent = dicResult.items[i].split("|")[2];
+            meaning.textContent = dicResult[i].item.split("|")[2];
             readMore.setAttribute("href", "https://dic.daum.net/search.do?q=" + keyword);
 
             wordElement.appendChild(br);
