@@ -80,11 +80,14 @@ async function searchDic(keyword) {
 
     let dicResult = await dicResponse.json();
     dicResult = dicResult.items;
-    
+    console.log(dicResult);
+
     if (searchMode == "eng")
         dicResult = dicResult.eng;
     else if (searchMode == "ene")
         dicResult = dicResult.ene;
+    else if (searchMode == "kor")
+        dicResult = dicResult.kor;
     else
         dicResult = dicResult.lan;
 
