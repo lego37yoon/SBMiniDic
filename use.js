@@ -80,7 +80,6 @@ async function searchDic(keyword) {
 
     let dicResult = await dicResponse.json();
     dicResult = dicResult.items;
-    console.log(dicResult);
 
     if (searchMode == "eng")
         dicResult = dicResult.eng;
@@ -90,8 +89,6 @@ async function searchDic(keyword) {
         dicResult = dicResult.kor;
     else
         dicResult = dicResult.lan;
-
-    console.log(dicResult);
 
     for (i = 0; i < dicResult.length; i++) {
         if (keyword == dicResult[i].key) {
@@ -153,7 +150,6 @@ async function searchTranslation(keyword) {
         redirect: 'follow'
     });
     let translateResult = await translateResponse.json();
-    console.log(translateResult);
     
     wordElement.textContent = keyword;
     if (translateResult.translated_text == undefined) {
