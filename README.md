@@ -26,3 +26,11 @@ WebExtensions 포맷이므로 이전의 XUL 기반 플러그인만 지원하는 
 ### 내려받기
 
 Firefox Add-Ons: [Sinabro Small Dictionary](https://addons.mozilla.org/ko/firefox/addon/sinabro-small-dictionary/)
+
+### OSS Notice
+
+This software uses following open source software.
+
+- [DOMPurify](https://github.com/cure53/DOMPurify), Apache License 2.0 / MPL 2.0 Dual License
+
+You can download used file from [here](https://github.com/lego37yoon/SBMiniDic/blob/master/purify.min.js)

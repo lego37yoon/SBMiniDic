@@ -101,7 +101,7 @@ async function searchDic(keyword) {
     for (i = 0; i < dicResult.length; i++) {
         if (keyword == dicResult[i].key) {
             wordElement.textContent = keyword;
-            meaning.textContent = dicResult[i].item.split("|")[2];
+            meaning.textContent = DOMPurify.sanitize(dicResult[i].item.split("|")[2]);
             readMore.textContent = "Daum 사전에서 뜻 더보기";
             readMore.setAttribute("href", `https://dic.daum.net/search.do?q=${keyword}`);
 
@@ -166,7 +166,7 @@ async function searchTranslation(keyword) {
                 translatedTexts += translateResult.translated_text[0][i];
             }    
         }
-        meaning.textContent = translatedTexts;
+        meaning.textContent = DOMPurify.sanitize(translatedTexts);
         readMore.textContent = "출처 | kakao i 번역";
         readMore.setAttribute("href", "https://translate.kakao.com");
     }

@@ -18,7 +18,7 @@
     },
     "content_scripts": [{
         "css": ["popup.css"],
-        "js": ["use.js"],
+        "js": ["use.js", "purify.min.js"],
         "matches": ["<all_urls>"]
     }],
 
