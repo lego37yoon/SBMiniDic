@@ -11,17 +11,25 @@ const detectUrl = "https://dapi.kakao.com/v3/translation/language/detect?query="
 let srcLang = "kr";
 let targetLang = "en";
 let apiKey = "KakaoAK ";
-let mouseFrame = document.createElement("div"); //팝업 생성
-let wordElement = document.createElement("p"); //p 요소 생성
-let meaning = document.createElement("span");
-let readMore = document.createElement("a");
-let br = document.createElement("br");
 let i = 0;
 
+/* Mini Popup */
+let mouseFrame = document.createElement("div"); //popup div
+mouseFrame.setAttribute("hidden", "true");
+let wordElement = document.createElement("p"); //word
 wordElement.setAttribute("class", "sinabroMiniDicWord");
+
+let meaning = document.createElement("p"); //meaning
 meaning.setAttribute("class", "sinabroMiniDicMeaning");
-readMore.textContent = "더보기";
+
+let readMore = document.createElement("a");
+
 readMore.setAttribute("class", "sinabroMiniDicReadMore");
+
+mouseFrame.appendChild(wordElement);
+mouseFrame.appendChild(meaning);
+mouseFrame.appendChild(readMore);
+
 document.body.appendChild(mouseFrame);
 
 function checkMode(e) {
@@ -94,17 +102,12 @@ async function searchDic(keyword) {
         if (keyword == dicResult[i].key) {
             wordElement.textContent = keyword;
             meaning.textContent = dicResult[i].item.split("|")[2];
-            readMore.setAttribute("href", "https://dic.daum.net/search.do?q=" + keyword);
-
-            wordElement.appendChild(br);
-            meaning.appendChild(readMore);
-            wordElement.appendChild(meaning);
-            mouseFrame.appendChild(wordElement)
+            readMore.textContent = "Daum 사전에서 뜻 더보기";
+            readMore.setAttribute("href", `https://dic.daum.net/search.do?q=${keyword}`);
 
             mouseFrame.style.display = "block";
         }
     }
-    //mouseFrame.innerHTML = keyword + "<br><p class='meaning'>" + result.items[0].split("|")[2] + "<a href='https://dic.daum.net/search.do?q=" + keyword + "'>더보기</a></p>";
 }
 
 async function searchTranslation(keyword) {
@@ -153,19 +156,20 @@ async function searchTranslation(keyword) {
     
     wordElement.textContent = keyword;
     if (translateResult.translated_text == undefined) {
-        meaning.textContent = "오류가 발생하였습니다: " + translateResult.message;
+        meaning.textContent = `kakao 번역 API에서 오류가 발생했습니다. 제공된 오류 메시지는 ${translateResult.message}입니다.`;
+        readMore.textContent = "kakao DevTalk에 상세 원인 물어보기";
+        readMore.setAttribute("href", "https://devtalk.kakao.com/c/translation-api/109")
     } else {
-        meaning.textContent = translateResult.translated_text[0][0];
+        let translatedTexts = translateResult.translated_text[0][0];
         if (translateResult.translated_text[0].length > 1) {
             for (i = 1; i < translateResult.translated_text[0].length; i++) {
-                meaning.textContent += translateResult.translated_text[0][i];
+                translatedTexts += translateResult.translated_text[0][i];
             }    
         }
+        meaning.textContent = translatedTexts;
+        readMore.textContent = "출처 | kakao i 번역";
+        readMore.setAttribute("href", "https://translate.kakao.com");
     }
-        
-    wordElement.appendChild(br);
-    wordElement.appendChild(meaning);
-    mouseFrame.appendChild(wordElement);
 
     mouseFrame.style.display = "block";
 }
