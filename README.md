@@ -33,4 +33,4 @@ This software uses following open source software.
 
 - [DOMPurify](https://github.com/cure53/DOMPurify), Apache License 2.0 / MPL 2.0 Dual License
 
-You can download used file from [here](https://github.com/lego37yoon/SBMiniDic/blob/master/purify.min.js)
+You can download used file from [here](https://github.com/lego37yoon/SBMiniDic/blob/main/purify.min.js)
