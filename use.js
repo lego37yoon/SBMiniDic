@@ -1,13 +1,14 @@
-const suggestUrl = "https://suggest.dic.daum.net/language/v1/search.json?cate=lan&q=";
+const suggestUrl = "https://suggest.dic.daum.net/language/v1/search.json";
 const korSuggestUrl = "https://suggest.dic.daum.net/language/v1/search.json?cate=kor&q="
 const engSuggestUrl = "https://suggest.dic.daum.net/language/v1/search.json?cate=ene&q=";
 const korengSuggestUrl = "https://suggest.dic.daum.net/language/v1/search.json?cate=eng&q=";
-//const korjpnSuggestUrl = "";
-//const korchnSuggestUrl = "";
+const korjpnSuggestUrl = "https://suggest.dic.daum.net/language/v1/search.json?cate=jpn&q=";
+const korchnSuggestUrl = "";
 const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힇]/;
 const english = /[a-z|A-Z]/;
 const translateUrl = "https://dapi.kakao.com/v2/translation/translate?query=";
 const detectUrl = "https://dapi.kakao.com/v3/translation/language/detect?query=";
+
 let srcLang = "kr";
 let targetLang = "en";
 let apiKey = "KakaoAK ";
@@ -50,32 +51,37 @@ function checkMode(e) {
 }
 
 async function searchDic(keyword) {
-    let searchUrl = suggestUrl + keyword;
-    let dictionaryMode = await browser.storage.sync.get(["krDicMode", "enDicMode"]);
     let searchMode = "lan";
+    let dictionaryMode = await browser.storage.sync.get(["krDicMode", "enDicMode"]);    
 
     if (korean.test(keyword)) { //사전 자동 전환 기능 (한국어)
-        if (dictionaryMode.krDicMode = "kr") {
-            searchUrl = korSuggestUrl + keyword;
-            searchMode = "kor";
-        }
-        else if (dictionaryMode.krDicMode = "en") {
-            searchUrl = engSuggestUrl + keyword;
-            searchMode = "eng";
+        switch(dictionaryMode.krDicMode) {
+            case "kr":
+                searchMode = "kor";
+                break;
+            case "en":
+                searchMode = "eng";
+                break;
+            case "jp":
+                searchMode = "jpn";
+                break;
+            case "cn":
+                searchMode = "chn";
+                break;
+            default:
+                searchMode = "lan";
         }
     }
 
     if (english.test(keyword)) { //사전 자동 전환 기능 (영어)
         if (dictionaryMode.enDicMode = "kr") {
-            searchUrl = korengSuggestUrl + keyword;
             searchMode = "eng";
         } else {
-            searchUrl = engSuggestUrl + keyword;
             searchMode = "ene";
         }
     }
 
-    let dicResponse = await fetch(searchUrl, {
+    let dicResponse = await fetch(`${suggestUrl}?cate=${searchMode}&q=${keyword}`, {
         method: 'GET',
         mode: 'no-cors',
         headers: {
@@ -87,16 +93,7 @@ async function searchDic(keyword) {
     })
 
     let dicResult = await dicResponse.json();
-    dicResult = dicResult.items;
-
-    if (searchMode == "eng")
-        dicResult = dicResult.eng;
-    else if (searchMode == "ene")
-        dicResult = dicResult.ene;
-    else if (searchMode == "kor")
-        dicResult = dicResult.kor;
-    else
-        dicResult = dicResult.lan;
+    dicResult = dicResult.items[searchMode];
 
     for (i = 0; i < dicResult.length; i++) {
         if (keyword == dicResult[i].key) {
@@ -106,6 +103,7 @@ async function searchDic(keyword) {
             readMore.setAttribute("href", `https://dic.daum.net/search.do?q=${keyword}`);
 
             mouseFrame.style.display = "block";
+            break;
         }
     }
 }
