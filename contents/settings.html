@@ -3,60 +3,8 @@
     <head>
         <title>시나브로 꼬마사전 설정</title>
         <meta charset="utf-8">
+        <link rel="stylesheet" href="./settings.css">
     </head>
-    <style>
-        h2 {
-            margin: 0;
-            font-weight: lighter;
-        }
-
-        h3 {
-            margin: 5px;
-            font-size: 16px;
-            font-weight: lighter;
-        }
-        button {
-            border: solid 1px gray;
-            border-radius: 5px;
-            background-color: white;
-            color: cornflowerblue;
-            padding: 3px 10px 3px 10px;
-        }
-        button:hover {
-            border: solid 1px gray;
-            border-radius: 5px;
-            background-color: white;
-            color: gray;
-            padding: 3px 10px 3px 10px;
-        }
-
-        .caution {
-            color: lightcoral;
-            margin: 0;
-        }
-        body {
-            color: black;
-            background-color: white;
-            font-size: 14px;
-        }
-        .disabled {
-            color: gray;
-        }
-        .translate,
-        .dic {
-            display: none;
-        }
-        @media (prefers-color-scheme: dark) {
-            body {
-                color: white;
-                background-color: #202023;
-            }
-            button {
-                background-color: gray;
-                color: white;
-            }
-        }
-    </style>
     <body>
         <form name="settings">
             <h2>시나브로 꼬마사전 설정</h2>
@@ -153,6 +101,7 @@
                 <label for="popupSerif">리디바탕</lable>
                 <input type="radio" id="popupSansSerif" name="fontMode" value="sansSerif" checked>
                 <label for="popupSansSerif">나눔스퀘어</label>
+                <p>안내: 나눔스퀘어의 글꼴 표시 방식 제약에 따라, 조만간 대체 글꼴이 추가되고 나눔스퀘어는 비권장 글꼴로 전환됩니다.</p>
             <hr>
             <button id="saveForm">저장</button>
         </form>

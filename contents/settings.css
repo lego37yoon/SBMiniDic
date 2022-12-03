@@ -1,0 +1,51 @@
+h2 {
+    margin: 0;
+    font-weight: lighter;
+}
+
+h3 {
+    margin: 5px;
+    font-size: 16px;
+    font-weight: lighter;
+}
+button {
+    border: solid 1px gray;
+    border-radius: 5px;
+    background-color: white;
+    color: cornflowerblue;
+    padding: 3px 10px 3px 10px;
+}
+button:hover {
+    border: solid 1px gray;
+    border-radius: 5px;
+    background-color: white;
+    color: gray;
+    padding: 3px 10px 3px 10px;
+}
+
+.caution {
+    color: lightcoral;
+    margin: 0;
+}
+body {
+    color: black;
+    background-color: white;
+    font-size: 14px;
+}
+.disabled {
+    color: gray;
+}
+.translate,
+.dic {
+    display: none;
+}
+@media (prefers-color-scheme: dark) {
+    body {
+        color: white;
+        background-color: #202023;
+    }
+    button {
+        background-color: gray;
+        color: white;
+    }
+}
