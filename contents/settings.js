@@ -10,16 +10,22 @@ function init() {
         document.getElementById("apikey").value = values.apikey; //번역 API Key 불러오기
         
         //기능 설정
-        if (values.dragToFind == true) { //드래그로 단어 찾기 기능 활성화 여부 확인
+        if (values.dragToFind) { //드래그로 단어 찾기 기능 활성화 여부 확인
             document.getElementById("dragToFind").checked = true;
         } else {
             document.getElementById("dragToFind").checked = false;
         }
 
-        if (values.contextToFind == true) { //마우스 오른쪽 클릭 메뉴로 단어 찾기 활성화 여부 확인
+        if (values.contextToFind) { //마우스 오른쪽 클릭 메뉴로 단어 찾기 활성화 여부 확인
             document.getElementById("contextToFind").checked = true;
         } else {
             document.getElementById("contextToFind").checked = false;
+        }
+
+        if (values.autoModeChange) {
+            document.getElementById("autoModeChange").checked = true;
+        } else {
+            document.getElementById("autoModeChange").checked = false;
         }
 
         if (values.mode == "translate") { //번역 모드, 사전 모드 확인
@@ -100,6 +106,7 @@ function saveValues() {
         apikey: document.getElementById("apikey").value, //카카오 번역 API 키
         dragToFind: dragMode, //드래그하여 찾기 기능 활성화 여부
         contextToFind: contextMode, //오른쪽 클릭 메뉴 활성화 여부
+        autoModeChange: document.getElementById("autoModeChange").value,
         srcLang: document.getElementById("srcLang").value, //번역 대상 언어
         targetLang: document.getElementById("targetLang").value, //번역 결과 언어
         krDicMode: document.getElementById("krDicMode").value, //한국어 사전 모드

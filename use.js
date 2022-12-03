@@ -52,7 +52,7 @@ function checkMode(e) {
 
 async function searchDic(keyword) {
     let searchMode = "lan";
-    let dictionaryMode = await browser.storage.sync.get(["krDicMode", "enDicMode"]);    
+    let dictionaryMode = await browser.storage.sync.get(["krDicMode", "enDicMode", "autoModeChange"]);    
 
     if (korean.test(keyword)) { //사전 자동 전환 기능 (한국어)
         switch(dictionaryMode.krDicMode) {
@@ -105,6 +105,10 @@ async function searchDic(keyword) {
             mouseFrame.style.display = "block";
             break;
         }
+    }
+
+    if (mouseFrame.style.display != "block" && dictionaryMode.autoModeChange) {
+        searchTranslation(keyword);
     }
 }
 
