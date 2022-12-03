@@ -64,10 +64,12 @@ function init() {
         
         if (values.fontMode == "serif") { 
             document.getElementsByName('fontMode')[0].checked = true; //리디바탕
-            document.getElementsByName('fontMode')[1].checked = false; //나눔바른고딕
+            document.getElementsByName('fontMode')[1].checked = false; //나눔스퀘어
+            document.body.style.fontFamily = "\"RIDIBatang\", serif";
         } else {
             document.getElementsByName('fontMode')[0].checked = false;
             document.getElementsByName('fontMode')[1].checked = true;
+            document.body.style.fontFamily = "\"NanumSquare\", sans-serif";
         }
 
     });
