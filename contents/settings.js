@@ -7,7 +7,33 @@ function init() {
     let i;
 
     savedSettings.then((values) => {
-        document.getElementById("apikey").value = values.apikey; //번역 API Key 불러오기
+        if (values.translateProvider) {
+            document.getElementById(values.translateProvider).checked = true;
+        } else {
+            document.getElementById("kakaodev").checked = true;
+        }
+        switch (values.translateProvider) {
+            case "naver":
+                showNaverPapago();
+                break;
+            case "google":
+                showGoogleTranslate();
+                break;
+            case "kakaodev":
+            default:
+                showKakaoDev();
+                break;
+        }
+        if (values.apikey) {
+            document.getElementById("apikey").value = values.apikey; //번역 API Key 불러오기
+        }
+        if (values.naverClientId && values.naverClientSecret) {
+            document.getElementById("naverClientId").value = values.naverClientId; //네이버 파파고 Client ID
+            document.getElementById("naverClientSecret").value = values.naverClientSecret; //네이버 파파고 Client Secret
+        }
+        if (values.googleApiKey) {
+            document.getElementById("googleApiKey").value = values.googleApiKey; //Google Cloud Translation API Key
+        }
         
         //기능 설정
         if (values.dragToFind) { //드래그로 단어 찾기 기능 활성화 여부 확인
@@ -29,13 +55,15 @@ function init() {
         }
 
         if (values.mode == "translate") { //번역 모드, 사전 모드 확인
-            document.getElementsByName('mode')[1].checked = true; //번역
-            document.getElementsByName('mode')[0].checked = false; //사전
-            document.getElementsByClassName('translate')[0].style.display = "block";
+            document.getElementById(values.mode).checked = true;
+            document.getElementById('translateSettings').style.display = "block";
         } else {
             document.getElementsByName('mode')[0].checked = true;
-            document.getElementsByName('mode')[1].checked = false;
-            document.getElementsByClassName('dic')[0].style.display = "block";
+            document.getElementById('dicSettings').style.display = "block";
+
+            if (values.autoModeChange) {
+                document.getElementById('translateSettings').style.display = "block";
+            }
         }
 
         //사전 설정
@@ -82,8 +110,9 @@ function init() {
 }
 
 function saveValues() {
-    let appMode = document.getElementsByName('mode');
-    let fontMode = document.getElementsByName('fontMode');
+    const appMode = document.getElementsByName('mode');
+    const transProvider = document.getElementsByName('translateProvider');
+    const fontMode = document.getElementsByName('fontMode');
     let dragMode;
     let contextMode;
 
@@ -104,9 +133,12 @@ function saveValues() {
     
     browser.storage.sync.set({ //저장
         apikey: document.getElementById("apikey").value, //카카오 번역 API 키
+        naverClientId: document.getElementById("naverClientId").value,
+        naverClientSecret: document.getElementById("naverClientSecret").value,
+        googleApiKey: document.getElementById("googleApiKey").value,
         dragToFind: dragMode, //드래그하여 찾기 기능 활성화 여부
         contextToFind: contextMode, //오른쪽 클릭 메뉴 활성화 여부
-        autoModeChange: document.getElementById("autoModeChange").value,
+        autoModeChange: document.getElementById("autoModeChange").checked, //사전 검색 결과 없으면 번역 결과 보여주기
         srcLang: document.getElementById("srcLang").value, //번역 대상 언어
         targetLang: document.getElementById("targetLang").value, //번역 결과 언어
         krDicMode: document.getElementById("krDicMode").value, //한국어 사전 모드
@@ -120,6 +152,13 @@ function saveValues() {
             });
         }
     }
+    for (i = 0; i < transProvider.length; i++) {
+        if (transProvider[i].checked) {
+            browser.storage.sync.set({
+                translateProvider: transProvider[i].value
+            });
+        }
+    }
     for (i = 0; i < fontMode.length; i++) {
         if (fontMode[i].checked) {
             browser.storage.sync.set({
@@ -130,16 +169,49 @@ function saveValues() {
 }
 
 function showMenu() {
-    document.getElementsByClassName('translate')[0].style.display = "block";
-    document.getElementsByClassName('dic')[0].style.display = "none";
+    document.getElementById('translateSettings').style.display = "block";
+    document.getElementById('dicSettings').style.display = "none";
 }
 
 function hideMenu() {
-    document.getElementsByClassName('translate')[0].style.display = "none";
-    document.getElementsByClassName('dic')[0].style.display = "block";
+    if (!document.getElementById("autoModeChange").checked) {
+        document.getElementById('translateSettings').style.display = "none";
+    } else {    
+        document.getElementById('translateSettings').style.display = "block";
+    }
+    document.getElementById('dicSettings').style.display = "block";
+
+}
+
+function showKakaoDev() {
+    document.getElementById("keyKakaoDev").style.display = "block";
+    document.getElementById("keyNaverPapago").style.display = "none";
+    document.getElementById("keyGoogleTranslate").style.display = "none";
+}
+
+function showNaverPapago() {
+    document.getElementById("keyNaverPapago").style.display = "block";
+    document.getElementById("keyGoogleTranslate").style.display = "none";
+    document.getElementById("keyKakaoDev").style.display = "none";
+}
+
+function showGoogleTranslate() {
+    document.getElementById("keyGoogleTranslate").style.display = "block";
+    document.getElementById("keyKakaoDev").style.display = "none";
+    document.getElementById("keyNaverPapago").style.display = "none";
 }
 
 document.addEventListener("DOMContentLoaded", init);
 document.getElementById("saveForm").addEventListener("click", saveValues);
 document.getElementById("translate").addEventListener("click", showMenu);
 document.getElementById("dic").addEventListener("click", hideMenu);
+document.getElementById("kakaodev").addEventListener("click", showKakaoDev);
+document.getElementById("naver").addEventListener("click", showNaverPapago);
+document.getElementById("google").addEventListener("click", showGoogleTranslate);
+document.getElementById("autoModeChange").addEventListener("change", function() {
+    if (this.checked) {
+        document.getElementById('translateSettings').style.display = "block";
+    } else {
+        document.getElementById('translateSettings').style.display = "none";
+    }
+})

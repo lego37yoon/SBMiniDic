@@ -1,13 +1,15 @@
+h1 {
+    font-weight: lighter;
+}
+
 h2 {
-    margin: 0;
     font-weight: lighter;
 }
 
 h3 {
-    margin: 5px;
-    font-size: 16px;
     font-weight: lighter;
 }
+
 button {
     border: solid 1px gray;
     border-radius: 5px;
@@ -35,8 +37,8 @@ body {
 .disabled {
     color: gray;
 }
-.translate,
-.dic {
+#translateSettings,
+#dicSettings {
     display: none;
 }
 @media (prefers-color-scheme: dark) {
