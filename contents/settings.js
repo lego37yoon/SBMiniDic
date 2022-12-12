@@ -143,8 +143,8 @@ function saveValues() {
         targetLang: document.getElementById("targetLang").value, //번역 결과 언어 (카카오)
         srcLangNaver: document.getElementById("srcLangNaver").value, //번역 대상 언어 (네이버)
         targetLangNaver: document.getElementById("targetLangNaver").value, //번역 결과 언어 (네이버)
-        srcLangGoogle: document.getElementById("srcLangGoogle").value, //번역 대상 언어 (구글)
-        targetLangGoogle: document.getElementById("targetLangGoogle").value, //번역 결과 언어 (구글)
+        //srcLangGoogle: document.getElementById("srcLangGoogle").value, //번역 대상 언어 (구글)
+        //targetLangGoogle: document.getElementById("targetLangGoogle").value, //번역 결과 언어 (구글)
         krDicMode: document.getElementById("krDicMode").value, //한국어 사전 모드
         enDicMode: document.getElementById("enDicMode").value, //영어 사전 모드
         fontSize: document.getElementById("popupFontSize").value //글꼴 크기
@@ -152,22 +152,22 @@ function saveValues() {
     for (i = 0; i < appMode.length; i++) {
         if (appMode[i].checked) {
             browser.storage.sync.set({
-                mode: appMode[i].value //사전 모드 혹은 번역 모드
-            });
+                mode: appMode[i].value
+            });//사전 모드 혹은 번역 모드
         }
     }
     for (i = 0; i < transProvider.length; i++) {
         if (transProvider[i].checked) {
             browser.storage.sync.set({
-                translateProvider: transProvider[i].value //번역 서비스 제공업체
-            });
+                translateProvider: transProvider[i].value
+            });//번역 서비스 제공업체
         }
     }
     for (i = 0; i < fontMode.length; i++) {
         if (fontMode[i].checked) {
             browser.storage.sync.set({
-                fontMode: fontMode[i].value //글꼴 선택
-            });
+                fontMode: fontMode[i].value
+            }); //글꼴 선택
         }
     }
 }

@@ -1,12 +1,6 @@
-const suggestUrl = "https://suggest.dic.daum.net/language/v1/search.json";
 const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힇]/;
 const english = /[a-z|A-Z]/;
-const translateUrl = "https://dapi.kakao.com/v2/translation/translate?query=";
-const detectUrl = "https://dapi.kakao.com/v3/translation/language/detect?query=";
 
-let srcLang = "kr";
-let targetLang = "en";
-let apiKey = "KakaoAK ";
 let i = 0;
 
 /* Mini Popup */
@@ -46,6 +40,8 @@ function checkMode(e) {
 }
 
 async function searchDic(keyword) {
+    const suggestUrl = "https://suggest.dic.daum.net/language/v1/search.json";
+
     let searchMode = "lan";
     let dictionaryMode = await browser.storage.sync.get(["krDicMode", "enDicMode", "autoModeChange"]);    
 
@@ -108,48 +104,18 @@ async function searchDic(keyword) {
 }
 
 async function searchTranslation(keyword) {
-    let res = await browser.storage.sync.get(["srcLang", "targetLang", "apikey"]);
-    
-    apiKey = "KakaoAK " + res.apikey; //API 키 설정
-
-    if (res.srcLang == "auto") { //자동 감지 기능 사용 시
-        let detectResponse = await fetch(detectUrl + keyword, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Authorization': apiKey
-            },
-            redirect: 'follow'
-        });
-        let detectResult = await detectResponse.json();
-
-        if (detectResult['language_info'][0]['code'] == "N/A") {
-            srcLang = "en";
-        } else {
-            srcLang = detectResult['language_info'][0]['code'];
-        }
-    } else { //그게 아니면 데이터 저장된 값 사용
-        srcLang = res.srcLang;
-    }
-
-
-    if (srcLang == "kr" && res.targetLang == "kr") { //원본->번역 모두 한국어면 결과 언어는 영어로
-        targetLang = "en";
-    } else if (srcLang == res.targetLang) { //원본->번역 모두 한국어 이외의 동일 언어면 결과 언어는 한국어
-        targetLang = "kr";
-    } else { //별 문제 없다면 저장된 원본 언어로
-        targetLang = res.targetLang;
-    }
-
-    let translateResponse = await fetch(translateUrl + keyword + "&src_lang=" + srcLang + "&target_lang=" + targetLang, {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-            'Authorization': apiKey
-        },
-        redirect: 'follow'
-    });
-    let translateResult = await translateResponse.json();
+    const res = await browser.storage.sync.get(["translaterovider"]);
+    let translateResult;
+    switch(res.translateProvider) {
+        case "naver":
+            break;
+        case "google":
+            break;
+        case "kakaodev":
+        default:
+            translateResult = await translateKakao(keyword);
+            break;
+    }    
     
     wordElement.textContent = keyword;
     if (translateResult.translated_text == undefined) {
@@ -169,6 +135,64 @@ async function searchTranslation(keyword) {
     }
 
     mouseFrame.style.display = "block";
+}
+
+async function translateKakao(keyword) {
+    const translateUrl = "https://dapi.kakao.com/v2/translation/translate";
+    const detectUrl = "https://dapi.kakao.com/v3/translation/language/detect";    
+
+    const res = await browser.storage.sync.get(["srcLang", "targetLang", "apikey"]);
+    let srcLang = "kr";
+    let targetLang = "en";
+
+    if (res.srcLang == "auto") { //자동 감지 기능 사용 시
+        let detectResponse = await fetch(`${detectUrl}?query=${keyword}`, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Authorization': `KakaoAK ${res.apikey}`
+            },
+            redirect: 'follow'
+        });
+        let detectResult = await detectResponse.json();
+
+        if (detectResult['language_info'][0]['code'] == "N/A") {
+            srcLang = "en";
+        } else {
+            srcLang = detectResult['language_info'][0]['code'];
+        }
+    } else { //그게 아니면 데이터 저장된 값 사용
+        srcLang = res.srcLang;
+    }
+
+    if (srcLang == "kr" && res.targetLang == "kr") { //원본->번역 모두 한국어면 결과 언어는 영어로
+        targetLang = "en";
+    } else if (srcLang == res.targetLang) { //원본->번역 모두 한국어 이외의 동일 언어면 결과 언어는 한국어
+        targetLang = "kr";
+    } else { //별 문제 없다면 저장된 원본 언어로
+        targetLang = res.targetLang;
+    }
+
+    const response = await fetch(`${translateUrl}?query=${keyword}&src_lang=${srcLang}&target_lang=${targetLang}`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Authorization': `KakaoAK ${res.apikey}`
+        },
+        redirect: 'follow'
+    });
+
+    return response.json();
+}
+
+async function translateNaver() {
+    const papagoUrl = "https://openapi.naver.com/v1/papago/n2mt";
+
+}
+
+async function translateGoogle() {
+    const googleUrl = "https://translation.googleapis.com/language/translate/v2";
+
 }
 
 function showFrame(mode, e) {
