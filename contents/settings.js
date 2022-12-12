@@ -133,14 +133,18 @@ function saveValues() {
     
     browser.storage.sync.set({ //저장
         apikey: document.getElementById("apikey").value, //카카오 번역 API 키
-        naverClientId: document.getElementById("naverClientId").value,
-        naverClientSecret: document.getElementById("naverClientSecret").value,
-        googleApiKey: document.getElementById("googleApiKey").value,
+        naverClientId: document.getElementById("naverClientId").value, //네이버 파파고 Client ID
+        naverClientSecret: document.getElementById("naverClientSecret").value, //네이버 파파고 Client Secret
+        googleApiKey: document.getElementById("googleApiKey").value, //Google Cloud Translation API Key
         dragToFind: dragMode, //드래그하여 찾기 기능 활성화 여부
         contextToFind: contextMode, //오른쪽 클릭 메뉴 활성화 여부
         autoModeChange: document.getElementById("autoModeChange").checked, //사전 검색 결과 없으면 번역 결과 보여주기
-        srcLang: document.getElementById("srcLang").value, //번역 대상 언어
-        targetLang: document.getElementById("targetLang").value, //번역 결과 언어
+        srcLang: document.getElementById("srcLang").value, //번역 대상 언어 (카카오)
+        targetLang: document.getElementById("targetLang").value, //번역 결과 언어 (카카오)
+        srcLangNaver: document.getElementById("srcLangNaver").value, //번역 대상 언어 (네이버)
+        targetLangNaver: document.getElementById("targetLangNaver").value, //번역 결과 언어 (네이버)
+        srcLangGoogle: document.getElementById("srcLangGoogle").value, //번역 대상 언어 (구글)
+        targetLangGoogle: document.getElementById("targetLangGoogle").value, //번역 결과 언어 (구글)
         krDicMode: document.getElementById("krDicMode").value, //한국어 사전 모드
         enDicMode: document.getElementById("enDicMode").value, //영어 사전 모드
         fontSize: document.getElementById("popupFontSize").value //글꼴 크기
@@ -148,21 +152,21 @@ function saveValues() {
     for (i = 0; i < appMode.length; i++) {
         if (appMode[i].checked) {
             browser.storage.sync.set({
-                mode: appMode[i].value
+                mode: appMode[i].value //사전 모드 혹은 번역 모드
             });
         }
     }
     for (i = 0; i < transProvider.length; i++) {
         if (transProvider[i].checked) {
             browser.storage.sync.set({
-                translateProvider: transProvider[i].value
+                translateProvider: transProvider[i].value //번역 서비스 제공업체
             });
         }
     }
     for (i = 0; i < fontMode.length; i++) {
         if (fontMode[i].checked) {
             browser.storage.sync.set({
-                fontMode: fontMode[i].value
+                fontMode: fontMode[i].value //글꼴 선택
             });
         }
     }
@@ -214,4 +218,58 @@ document.getElementById("autoModeChange").addEventListener("change", function() 
     } else {
         document.getElementById('translateSettings').style.display = "none";
     }
-})
+});
+document.getElementById("srcLangNaver").addEventListener("change", function() {
+    const options = document.getElementById("targetLangNaver");
+    const hiddenOptions = options.querySelectorAll("[hidden]");
+    for (i = 0; i < hiddenOptions.length; i++) {
+        hiddenOptions[i].removeAttribute("hidden");
+    }
+    switch (this.value) {
+        case "ko":
+            options.querySelector("option[value='ko']").setAttribute("hidden", "");
+            options.value = "en";
+        case "auto":
+            break;
+        case "en":
+            for (i = 0; i < options.length; i++) {
+                switch(options[i].value) {
+                    case "ja":
+                    case "fr":
+                    case "ko":
+                        break;
+                    default:
+                        options[i].setAttribute("hidden", "");
+                        break;
+                }
+            }
+            options.value = "ko";
+            break;
+        case "ja":
+        case "fr":
+            for (i = 0; i < options.length; i++) {
+                switch(options[i].value) {
+                    case "en":
+                    case "ko":
+                        break;
+                    default:
+                        options[i].setAttribute("hidden", "");
+                        break;
+                }
+            }
+            options.value = "ko";
+            break;
+        default:
+            for (i = 0; i < options.length; i++) {
+                switch(options[i].value) {
+                    case "ko":
+                        break;
+                    default:
+                        options[i].setAttribute("hidden", "");
+                        break;
+                }
+            }
+            options.value = "ko";
+            break;
+    }
+});
