@@ -104,34 +104,61 @@ async function searchDic(keyword) {
 }
 
 async function searchTranslation(keyword) {
-    const res = await browser.storage.sync.get(["translaterovider"]);
+    const res = await browser.storage.sync.get(["translateProvider"]);
     let translateResult;
     switch(res.translateProvider) {
         case "naver":
             break;
         case "google":
+            translateResult = await translateGoogle(keyword);
             break;
         case "kakaodev":
         default:
             translateResult = await translateKakao(keyword);
             break;
-    }    
+    }
     
     wordElement.textContent = keyword;
-    if (translateResult.translated_text == undefined) {
-        meaning.textContent = `kakao 번역 API에서 오류가 발생했습니다. 제공된 오류 메시지는 ${translateResult.message}입니다.`;
-        readMore.textContent = "kakao DevTalk에 상세 원인 물어보기";
-        readMore.setAttribute("href", "https://devtalk.kakao.com/c/translation-api/109")
-    } else {
-        let translatedTexts = translateResult.translated_text[0][0];
-        if (translateResult.translated_text[0].length > 1) {
-            for (i = 1; i < translateResult.translated_text[0].length; i++) {
-                translatedTexts += translateResult.translated_text[0][i];
-            }    
-        }
-        meaning.textContent = DOMPurify.sanitize(translatedTexts);
-        readMore.textContent = "출처 | kakao i 번역";
-        readMore.setAttribute("href", "https://translate.kakao.com");
+    switch(res.translateProvider) {
+        case "naver":
+            break;
+        case "google":
+            console.log(translateResult);
+            if (translateResult.data == undefined) {
+                meaning.textContent = `Google 번역 API에서 오류가 발생했습니다. 오류코드: ${translateResult.error.code}, 메시지: ${translateResult.error.message}, 종류: ${translateResult.error.status}`
+                readMore.textContent = "Google Cloud Translation 문서 읽어보기";
+                readMore.setAttribute("href", "https://cloud.google.com/translate/docs?hl=ko");
+            } else {
+                let translatedTexts = translateResult.data.translations[0].translatedText;
+                if (translateResult.data.translations.length > 1) {
+                    for (i = 1; i < translateResult.data.translations.length; i++) {
+                        translatedTexts += translateResult.data.translations[i].translatedText;
+                    }
+                }
+                meaning.textContent = DOMPurify.sanitize(translatedTexts);
+                readMore.textContent = "출처 | Google 번역";
+                readMore.setAttribute("href", "https://translate.google.com");
+                break;
+            }
+            break;
+        case "kakaodev":
+        default:
+            if (translateResult.translated_text == undefined) {
+                meaning.textContent = `kakao 번역 API에서 오류가 발생했습니다. 제공된 오류 메시지는 ${translateResult.message}입니다.`;
+                readMore.textContent = "kakao DevTalk에 상세 원인 물어보기";
+                readMore.setAttribute("href", "https://devtalk.kakao.com/c/translation-api/109");    
+            } else {
+                let translatedTexts = translateResult.translated_text[0][0];
+                if (translateResult.translated_text[0].length > 1) {
+                    for (i = 1; i < translateResult.translated_text[0].length; i++) {
+                        translatedTexts += translateResult.translated_text[0][i];
+                    }    
+                }
+                meaning.textContent = DOMPurify.sanitize(translatedTexts);
+                readMore.textContent = "출처 | kakao i 번역";
+                readMore.setAttribute("href", "https://translate.kakao.com");
+            }
+            break;
     }
 
     mouseFrame.style.display = "block";
@@ -185,14 +212,69 @@ async function translateKakao(keyword) {
     return response.json();
 }
 
-async function translateNaver() {
+async function translateNaver(keyword) {
     const papagoUrl = "https://openapi.naver.com/v1/papago/n2mt";
+    const detectUrl = "https://openapi.naver.com/v1/papago/detectLangs";
+    let srcLang = "ko";
+    let targetLang = "en";
 
+    
+    const res = await browser.storage.sync.get(["srcLangNaver", "targetLangNaver", "naverClientId", "naverClientSecret"]);
+
+    // To-Do : Detect Language
+
+    const response = await fetch(`${papagoUrl}`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'X-Naver-Client-Id': `${res.naverClientId}`,
+            'X-Naver-Client-Secret': `${res.naverClientSecret}`,
+            'User-Agent': 'curl/7.86.0'
+        },
+        redirect: 'follow',
+        body: `source=${srcLang}&target=${targetLang}&text=${keyword}`
+    });
+
+    return response.json();
 }
 
-async function translateGoogle() {
+async function translateGoogle(keyword) {
     const googleUrl = "https://translation.googleapis.com/language/translate/v2";
+    const res = await browser.storage.sync.get(["srcLangGoogle", "targetLangGoogle", "googleApiKey"]);
+    
+    if (res.srcLangGoogle == "auto") {
+        const response = await fetch(`${googleUrl}?key=${res.googleApiKey}`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            redirect: 'follow',
+            body: `{
+                "q": "${keyword}",
+                "target": "${res.targetLangGoogle}"
+            }`
+        });
 
+        return response.json();
+    }
+
+    const response = await fetch(`${googleUrl}?key=${res.googleApiKey}`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        body: `{
+            "q": "${keyword}",
+            "source": "${res.srcLangGoogle}",
+            "target": "${res.targetLangGoogle}"
+        }`
+    });   
+
+    return response.json();
 }
 
 function showFrame(mode, e) {

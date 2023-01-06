@@ -2,7 +2,7 @@
 
 ## 시나브로 꼬마사전
 
-시나브로 꼬마사전은 [Firefox Quantum](https://firefox.com) Desktop을 위한 확장 기능입니다. 모바일 버전의 꼬마사전과 동일한 기능을 제공하며, 다음 사전에 없는 내용은 [kakao i 번역](https://translate.kakao.com)의 열린 API를 이용하여 결과를 표시하였으나, 번역 API의 개인 접근이 어려워짐에 따라 버전 2.0부터 [네이버 Papago](https://papago.naver.com) 및 [Google 번역](https://translate.google.com) API 중 선택하여 사용할 수 있습니다. (단, 기존 사용자도 2023년 6월 30일까지 이전처럼 이용하실 수 있으며 추후 여건에 따라 카카오엔터프라이즈에서 제공하는 번역 API에도 대응 예정입니다.)
+시나브로 꼬마사전은 [Firefox Quantum](https://firefox.com) Desktop을 위한 확장 기능입니다. 모바일 버전의 꼬마사전과 동일한 기능을 제공하며, 다음 사전에 없는 내용은 [kakao i 번역](https://translate.kakao.com)의 열린 API를 이용하여 결과를 표시하였으나, 번역 API의 개인 접근이 어려워짐에 따라 버전 2.0부터 [Google 번역](https://translate.google.com) API를 선택하여 사용할 수 있습니다. (단, 기존 사용자도 2023년 6월 30일까지 이전처럼 이용하실 수 있으며 추후 여건에 따라 카카오엔터프라이즈에서 제공하는 번역 API에도 대응 예정입니다.)
 
 본 프로젝트는 Toy Project의 일종으로 업데이트가 활발하지 않으며, 작동하지 않는 부분에 대한 조치가 늦어질 수 있습니다.
 

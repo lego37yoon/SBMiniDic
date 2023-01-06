@@ -1,9 +1,7 @@
 function init() {
-    let savedSettings = browser.storage.sync.get(); //저장된 값 불러오기
-    let srcLangOptionNodes = document.getElementById("srcLang").childNodes;
-    let targetLangOptionNodes = document.getElementById("targetLang").childNodes;
-    let krDicNodes = document.getElementById("krDicMode").childNodes;
-    let enDicNodes = document.getElementById("enDicMode").childNodes;
+    const savedSettings = browser.storage.sync.get(); //저장된 값 불러오기
+    const krDicNodes = document.getElementById("krDicMode").childNodes;
+    const enDicNodes = document.getElementById("enDicMode").childNodes;
     let i;
 
     savedSettings.then((values) => {
@@ -24,6 +22,22 @@ function init() {
                 showKakaoDev();
                 break;
         }
+
+        if (values.srcLangNaver) {
+            setSrcTargetLang(values.srcLangNaver, values.targetLangNaver, 
+                document.getElementById("srcLangNaver").childNodes, document.getElementById("targetLangNaver").childNodes);
+        }
+
+        if (values.srcLangGoogle) {
+            setSrcTargetLang(values.srcLangGoogle, values.targetLangGoogle, 
+                document.getElementById("srcLangGoogle").childNodes, document.getElementById("targetLangGoogle").childNodes);
+        }
+
+        if (values.srcLang) {
+            setSrcTargetLang(values.srcLang, values.targetLang, 
+                document.getElementById("srcLang").childNodes, document.getElementById("targetLang").childNodes);
+        }
+
         if (values.apikey) {
             document.getElementById("apikey").value = values.apikey; //번역 API Key 불러오기
         }
@@ -75,19 +89,6 @@ function init() {
         for (i = 0; i < enDicNodes.length; i++) {
             if (values.enDicMode == enDicNodes[i].value) {
                 enDicNodes[i].selected = true;
-            }
-        }
-
-        //번역 설정
-        for (i = 0; i < srcLangOptionNodes.length; i++) { //번역 대상 언어 저장된 값 지정
-            if (values.srcLang == srcLangOptionNodes[i].value) {
-                srcLangOptionNodes[i].selected = true;
-            }
-        }
-
-        for (i = 0; i < targetLangOptionNodes.length; i++) { //결과물 언어 저장된 값 지정
-            if (values.targetLang == targetLangOptionNodes[i].value) {
-                targetLangOptionNodes[i].selected = true;
             }
         }
 
@@ -143,8 +144,8 @@ function saveValues() {
         targetLang: document.getElementById("targetLang").value, //번역 결과 언어 (카카오)
         srcLangNaver: document.getElementById("srcLangNaver").value, //번역 대상 언어 (네이버)
         targetLangNaver: document.getElementById("targetLangNaver").value, //번역 결과 언어 (네이버)
-        //srcLangGoogle: document.getElementById("srcLangGoogle").value, //번역 대상 언어 (구글)
-        //targetLangGoogle: document.getElementById("targetLangGoogle").value, //번역 결과 언어 (구글)
+        srcLangGoogle: document.getElementById("srcLangGoogle").value, //번역 대상 언어 (구글)
+        targetLangGoogle: document.getElementById("targetLangGoogle").value, //번역 결과 언어 (구글)
         krDicMode: document.getElementById("krDicMode").value, //한국어 사전 모드
         enDicMode: document.getElementById("enDicMode").value, //영어 사전 모드
         fontSize: document.getElementById("popupFontSize").value //글꼴 크기
@@ -203,6 +204,21 @@ function showGoogleTranslate() {
     document.getElementById("keyGoogleTranslate").style.display = "block";
     document.getElementById("keyKakaoDev").style.display = "none";
     document.getElementById("keyNaverPapago").style.display = "none";
+}
+
+function setSrcTargetLang(srcLang, targetLang, srcLangOptionNodes, targetLangOptionNodes) {
+    //번역 설정
+    for (i = 0; i < srcLangOptionNodes.length; i++) { //번역 대상 언어 저장된 값 지정
+        if (srcLang == srcLangOptionNodes[i].value) {
+            srcLangOptionNodes[i].selected = true;
+        }
+    }
+
+    for (i = 0; i < targetLangOptionNodes.length; i++) { //결과물 언어 저장된 값 지정
+        if (targetLang == targetLangOptionNodes[i].value) {
+            targetLangOptionNodes[i].selected = true;
+        }
+    }
 }
 
 document.addEventListener("DOMContentLoaded", init);
