@@ -102,7 +102,7 @@ async function searchDic(keyword) {
 
     if (mouseFrame.style.display != "block" && dictionaryMode.autoModeChange) {
         searchTranslation(keyword);
-    } else {
+    } else if (mouseFrame.style.display != "block") {
         meaning.textContent = `오류가 발생했습니다. 오류 코드 ${dicResponse.status} ${dicResponse.statusText} 검색을 시도한 내용과 오류코드를 포함하여 문의해주세요.`;
         readMore.textContent = "개발자에게 문의하기";
         readMore.setAttribute("href", "https://github.com/lego37yoon/SBMiniDic/issues");
@@ -178,9 +178,10 @@ async function translateKakao(keyword) {
     const res = await browser.storage.sync.get(["srcLang", "targetLang", "apikey"]);
     let srcLang = "kr";
     let targetLang = "en";
+    let encodedKeyword = encodeURI(keyword)
 
     if (res.srcLang == "auto") { //자동 감지 기능 사용 시
-        let detectResponse = await fetch(`${detectUrl}?query=${keyword}`, {
+        let detectResponse = await fetch(`${detectUrl}?query=${encodedKeyword}`, {
             method: 'GET',
             mode: 'cors',
             headers: {
@@ -207,7 +208,7 @@ async function translateKakao(keyword) {
         targetLang = res.targetLang;
     }
 
-    const response = await fetch(`${translateUrl}?query=${keyword}&src_lang=${srcLang}&target_lang=${targetLang}`, {
+    const response = await fetch(`${translateUrl}?query=${encodedKeyword}&src_lang=${srcLang}&target_lang=${targetLang}`, {
         method: 'GET',
         mode: 'cors',
         headers: {
