@@ -41,7 +41,7 @@ function checkMode(e) {
 
 async function searchDic(keyword) {
     const suggestUrl = "https://suggest.dic.daum.net/language/v1/search.json";
-
+    
     let searchMode = "lan";
     let dictionaryMode = await browser.storage.sync.get(["krDicMode", "enDicMode", "autoModeChange"]);    
 
@@ -83,27 +83,35 @@ async function searchDic(keyword) {
         referrer: 'https://dic.daum.net'
     })
 
-    let dicResult = await dicResponse.json();
-    dicResult = dicResult.items[searchMode];
+    if(dicResponse.ok) {
+        let dicResult = await dicResponse.json();
+        dicResult = dicResult.items[searchMode];
 
-    for (i = 0; i < dicResult.length; i++) {
-        if (keyword == dicResult[i].key) {
-            wordElement.textContent = keyword;
-            meaning.textContent = DOMPurify.sanitize(dicResult[i].item.split("|")[2]);
-            readMore.textContent = "Daum 사전에서 뜻 더보기";
-            readMore.setAttribute("href", `https://dic.daum.net/search.do?q=${keyword}`);
+        for (i = 0; i < dicResult.length; i++) {
+            if (keyword == dicResult[i].key) {
+                wordElement.textContent = keyword;
+                meaning.textContent = DOMPurify.sanitize(dicResult[i].item.split("|")[2]);
+                readMore.textContent = "Daum 사전에서 뜻 더보기";
+                readMore.setAttribute("href", `https://dic.daum.net/search.do?q=${keyword}`);
 
-            mouseFrame.style.display = "block";
-            break;
+                mouseFrame.style.display = "block";
+                break;
+            }
         }
     }
 
     if (mouseFrame.style.display != "block" && dictionaryMode.autoModeChange) {
         searchTranslation(keyword);
+    } else {
+        meaning.textContent = `오류가 발생했습니다. 오류 코드 ${dicResponse.status} ${dicResponse.statusText} 검색을 시도한 내용과 오류코드를 포함하여 문의해주세요.`;
+        readMore.textContent = "개발자에게 문의하기";
+        readMore.setAttribute("href", "https://github.com/lego37yoon/SBMiniDic/issues");
+        mouseFrame.style.display = "block";
     }
 }
 
 async function searchTranslation(keyword) {
+    
     const res = await browser.storage.sync.get(["translateProvider"]);
     let translateResult;
     switch(res.translateProvider) {
@@ -123,7 +131,6 @@ async function searchTranslation(keyword) {
         case "naver":
             break;
         case "google":
-            console.log(translateResult);
             if (translateResult.data == undefined) {
                 meaning.textContent = `Google 번역 API에서 오류가 발생했습니다. 오류코드: ${translateResult.error.code}, 메시지: ${translateResult.error.message}, 종류: ${translateResult.error.status}`
                 readMore.textContent = "Google Cloud Translation 문서 읽어보기";
@@ -257,6 +264,7 @@ async function translateGoogle(keyword) {
             }`
         });
 
+        console.log(response);
         return response.json();
     }
 
