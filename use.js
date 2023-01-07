@@ -43,7 +43,8 @@ async function searchDic(keyword) {
     const suggestUrl = "https://suggest.dic.daum.net/language/v1/search.json";
     
     let searchMode = "lan";
-    let dictionaryMode = await browser.storage.sync.get(["krDicMode", "enDicMode", "autoModeChange"]);    
+    let dictionaryMode = await browser.storage.sync.get(["krDicMode", "enDicMode", "autoModeChange"]);
+    let encodedKeyword = encodeURI(keyword);
 
     if (korean.test(keyword)) { //사전 자동 전환 기능 (한국어)
         switch(dictionaryMode.krDicMode) {
@@ -72,7 +73,7 @@ async function searchDic(keyword) {
         }
     }
 
-    let dicResponse = await fetch(`${suggestUrl}?cate=${searchMode}&q=${keyword}`, {
+    let dicResponse = await fetch(`${suggestUrl}?cate=${searchMode}&q=${encodedKeyword}`, {
         method: 'GET',
         mode: 'no-cors',
         headers: {
@@ -178,7 +179,7 @@ async function translateKakao(keyword) {
     const res = await browser.storage.sync.get(["srcLang", "targetLang", "apikey"]);
     let srcLang = "kr";
     let targetLang = "en";
-    let encodedKeyword = encodeURI(keyword)
+    let encodedKeyword = encodeURI(keyword);
 
     if (res.srcLang == "auto") { //자동 감지 기능 사용 시
         let detectResponse = await fetch(`${detectUrl}?query=${encodedKeyword}`, {
@@ -265,7 +266,6 @@ async function translateGoogle(keyword) {
             }`
         });
 
-        console.log(response);
         return response.json();
     }
 
