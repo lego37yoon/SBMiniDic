@@ -251,6 +251,35 @@ async function translateNaver(keyword) {
 async function translateGoogle(keyword) {
     const googleUrl = "https://translation.googleapis.com/language/translate/v2";
     const res = await browser.storage.sync.get(["srcLangGoogle", "targetLangGoogle", "googleApiKey"]);
+    let targetLang = "en";
+
+    const detectResult = await fetch(`${googleUrl}/detect?key=${res.googleApiKey}`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        body: `{
+            "q": "${keyword}"
+        }`
+    });
+
+    const detectContents = await detectResult.json()
+    const detectLang = detectContents.data.detections[0][0].language;
+    
+    if (detectLang == res.targetLangGoogle) {
+        switch(detectLang) {
+            case "ko":
+                targetLang = "en";
+                break;
+            default:
+                targetLang = "ko";
+                break;
+        }
+    } else {
+        targetLang = res.targetLangGoogle;
+    }
     
     if (res.srcLangGoogle == "auto") {
         const response = await fetch(`${googleUrl}?key=${res.googleApiKey}`, {
@@ -262,7 +291,7 @@ async function translateGoogle(keyword) {
             redirect: 'follow',
             body: `{
                 "q": "${keyword}",
-                "target": "${res.targetLangGoogle}"
+                "target": "${targetLang}"
             }`
         });
 
@@ -279,7 +308,7 @@ async function translateGoogle(keyword) {
         body: `{
             "q": "${keyword}",
             "source": "${res.srcLangGoogle}",
-            "target": "${res.targetLangGoogle}"
+            "target": "${targetLang}"
         }`
     });   
 
