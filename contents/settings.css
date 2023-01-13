@@ -48,7 +48,7 @@ body {
     background-color: white;
     font-size: 14px;
 }
-.disabled {
+input:disabled + label {
     color: gray;
 }
 #translateSettings,
