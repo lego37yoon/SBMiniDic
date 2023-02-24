@@ -157,10 +157,10 @@ async function searchTranslation(keyword) {
                 readMore.setAttribute("href", "https://devtalk.kakao.com/c/translation-api/109");    
             } else {
                 let translatedTexts = translateResult.translated_text[0][0];
-                if (translateResult.translated_text[0].length > 1) {
-                    for (i = 1; i < translateResult.translated_text[0].length; i++) {
-                        translatedTexts += translateResult.translated_text[0][i];
-                    }    
+                if (translateResult.translated_text.length > 1) {
+                    for (i = 1; i < translateResult.translated_text.length; i++) {
+                        translatedTexts += translateResult.translated_text[i][0];
+                    }
                 }
                 meaning.textContent = DOMPurify.sanitize(translatedTexts);
                 readMore.textContent = "출처 | kakao i 번역";
