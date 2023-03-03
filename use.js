@@ -14,8 +14,6 @@ meaning.setAttribute("class", "sinabroMiniDicMeaning");
 
 let readMore = document.createElement("a");
 readMore.setAttribute("class", "sinabroMiniDicReadMore");
-readMore.setAttribute("target", "_blank");
-readMore.setAttribute("rel", "noopener noreferer");
 
 mouseFrame.appendChild(wordElement);
 mouseFrame.appendChild(meaning);
@@ -24,19 +22,23 @@ mouseFrame.appendChild(readMore);
 document.body.appendChild(mouseFrame);
 
 function checkMode(e) {
-    let checkSavedValue = browser.storage.sync.get(["dragToFind", "mode"]);
+    let checkSavedValue = browser.storage.sync.get(["dragToFind", "mode", "openNewTab"]);
     
     checkSavedValue.then((res) => {
-       
-       if (res.mode == "translate") {
-           if (res.dragToFind == true) {
+        if (res.openNewTab) {
+            readMore.setAttribute("target", "_blank");
+            readMore.setAttribute("rel", "noopener noreferer");
+        }
+
+        if (res.mode == "translate") {
+            if (res.dragToFind == true) {
                showFrame("translate", e);
-           }
-       } else {
-           if (res.dragToFind == true) {
+            }
+        } else {
+            if (res.dragToFind == true) {
                showFrame("dic", e);
-           }
-       }
+            }
+        }
     });
 }
 

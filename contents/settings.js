@@ -62,6 +62,12 @@ function init() {
             document.getElementById("contextToFind").checked = false;
         }
 
+        if (values.openNewTab) {
+            document.getElementById("openNewTab").checked = true;
+        } else {
+            document.getElementById("openNewTab").checked = false;
+        }
+
         if (values.autoModeChange) {
             document.getElementById("autoModeChange").checked = true;
         } else {
@@ -114,22 +120,9 @@ function saveValues() {
     const appMode = document.getElementsByName('mode');
     const transProvider = document.getElementsByName('translateProvider');
     const fontMode = document.getElementsByName('fontMode');
-    let dragMode;
-    let contextMode;
-
+    
     if (!document.getElementById("dragToFind").checked && !document.getElementById("contextToFind").checked) {
         alert("최소한 하나 이상의 방법을 선택하세요.");
-    } else {
-        if (document.getElementById("dragToFind").checked) {
-            dragMode = true;
-        } else {
-            dragMode = false;
-        }
-        if (document.getElementById("contextToFind").checked) {
-            contextMode = true;
-        } else {
-            contextMode = false;
-        }
     }
     
     browser.storage.sync.set({ //저장
@@ -137,8 +130,9 @@ function saveValues() {
         naverClientId: document.getElementById("naverClientId").value, //네이버 파파고 Client ID
         naverClientSecret: document.getElementById("naverClientSecret").value, //네이버 파파고 Client Secret
         googleApiKey: document.getElementById("googleApiKey").value, //Google Cloud Translation API Key
-        dragToFind: dragMode, //드래그하여 찾기 기능 활성화 여부
-        contextToFind: contextMode, //오른쪽 클릭 메뉴 활성화 여부
+        dragToFind: document.getElementById("dragToFind").checked, //드래그하여 찾기 기능 활성화 여부
+        contextToFind: document.getElementById("contextToFind").checked, //오른쪽 클릭 메뉴 활성화 여부
+        openNewTab: document.getElementById("openNewTab").checked, //새 탭에서 상세 정보 열기 활성화 여부
         autoModeChange: document.getElementById("autoModeChange").checked, //사전 검색 결과 없으면 번역 결과 보여주기
         srcLang: document.getElementById("srcLang").value, //번역 대상 언어 (카카오)
         targetLang: document.getElementById("targetLang").value, //번역 결과 언어 (카카오)
