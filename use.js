@@ -13,8 +13,9 @@ let meaning = document.createElement("p"); //meaning
 meaning.setAttribute("class", "sinabroMiniDicMeaning");
 
 let readMore = document.createElement("a");
-
 readMore.setAttribute("class", "sinabroMiniDicReadMore");
+readMore.setAttribute("target", "_blank");
+readMore.setAttribute("rel", "noopener noreferer");
 
 mouseFrame.appendChild(wordElement);
 mouseFrame.appendChild(meaning);
