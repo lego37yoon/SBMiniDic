@@ -2,7 +2,12 @@ function init() {
     const savedSettings = browser.storage.sync.get(); //저장된 값 불러오기
     const krDicNodes = document.getElementById("krDicMode").childNodes;
     const enDicNodes = document.getElementById("enDicMode").childNodes;
+    const today = new Date();
     let i;
+
+    if (today > Date.parse("Thu, 30 Jun 2023 23:59:59 UTC+0900")) {
+        document.getElementById("kakaodev").disabled = true;
+    }
 
     savedSettings.then((values) => {
         if (values.translateProvider) {
