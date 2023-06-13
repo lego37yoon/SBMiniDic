@@ -22,9 +22,12 @@ Daum 사전팀 및 주식회사 카카오와 어떠한 연관도 없는 **비공
 
 ### 지원 환경
 
-Firefox 브라우저 57+ (Windows, macOS, Linux)
+* *버전 2.x 이하* Firefox 브라우저 57+ (Windows, macOS, Linux)
+* *버전 3.0 이상* Firefox 브라우저 98+ (Windows, macOS, Linux)
 
 WebExtensions 포맷이므로 이전의 XUL 기반 플러그인만 지원하는 Firefox 기반 변종 브라우저 및 Firefox 구 버전은 지원하지 않습니다.
+
+Firefox 브라우저 106 미만 버전에서는 부가기능 버전 2.1.0 이상 환경에서 마이그레이션 스크립트 문제로 경고가 표시될 수 있습니다.
 
 ### 내려받기
 
@@ -34,11 +37,11 @@ Firefox Add-Ons: [Sinabro Small Dictionary](https://addons.mozilla.org/ko/firefo
 
 This software uses following open source software.
 
-- [DOMPurify](https://github.com/cure53/DOMPurify), Apache License 2.0 / MPL 2.0 Dual License
+- [DOMPurify] 3.0.3 (https://github.com/cure53/DOMPurify), Apache License 2.0 / MPL 2.0 Dual License
 
   You can download used file from [here](https://github.com/lego37yoon/SBMiniDic/blob/main/purify.min.js)
 
 - [NanumSquare Regular](https://hangeul.naver.com), [SIL OFL 1.1](https://help.naver.com/service/30016/contents/18088?osType=PC&lang=ko)
 - [RIDIBatang](https://ridicorp.com/ridibatang), SIL OFL 1.1
-
+- [Pretendard Variable](https://cactus.tistory.com/306), SIL OFL
 
