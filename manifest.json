@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Sinabro Small Dictionary",
-    "version": "2.0.1",
+    "version": "2.1.0",
     "permissions": ["storage", "menus", "clipboardWrite", "<all_urls>"],
 
     "description": "Unofficial Dictionary Add-On based on Daum Dictionary and kakao i translate service",
@@ -24,7 +24,8 @@
 
     "web_accessible_resources": [
         "resources/NanumSquareR.woff",
-        "resources/RIDIBatang.woff"
+        "resources/RIDIBatang.woff",
+        "resources/PretendardVariable.woff2"
     ],
 
     "browser_specific_settings": {
