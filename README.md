@@ -37,9 +37,11 @@ Firefox Add-Ons: [Sinabro Small Dictionary](https://addons.mozilla.org/ko/firefo
 
 This software uses following open source software.
 
-- [DOMPurify] 3.0.3 (https://github.com/cure53/DOMPurify), Apache License 2.0 / MPL 2.0 Dual License
+- [DOMPurify](https://github.com/cure53/DOMPurify) 3.0.3, Apache License 2.0 / MPL 2.0 Dual License
 
-  You can download used file from [here](https://github.com/lego37yoon/SBMiniDic/blob/main/purify.min.js)
+  You can download used file from these links below:
+  - [purify.min.js](https://github.com/lego37yoon/SBMiniDic/blob/main/purify.min.js)
+  - [purify.min.js](https://github.com/lego37yoon/SBMiniDic/blob/main/purify.min.js.map)
 
 - [NanumSquare Regular](https://hangeul.naver.com), [SIL OFL 1.1](https://help.naver.com/service/30016/contents/18088?osType=PC&lang=ko)
 - [RIDIBatang](https://ridicorp.com/ridibatang), SIL OFL 1.1
