@@ -443,16 +443,21 @@
                 <input type="number" id="popupFontSize" value="12" min="1" max="48">pt
                 <br>
                 <label>글꼴 형태</label>
-                <input type="radio" id="popupSerif" name="fontMode" value="serif">
-                <label for="popupSerif">리디바탕</lable>
-                <input type="radio" id="popupSansSerif" name="fontMode" value="sansSerif" checked>
-                <label for="popupSansSerif">나눔스퀘어</label>
-                <p>안내: 나눔스퀘어의 글꼴 표시 방식 제약에 따라, 조만간 대체 글꼴이 추가되고 나눔스퀘어는 비권장 글꼴로 전환됩니다.</p>
+                <input type="radio" id="popupRIDIBatang" name="fontMode" value="RIDIBatang">
+                <label for="popupRIDIBatang">리디바탕</lable>
+                <input type="radio" id="popupNanumSquare" name="fontMode" value="NanumSquare">
+                <label for="popupNanumSquare">나눔스퀘어</label>
+                <input type="radio" id="popupPretendardVariable" name="fontMode" value="Pretendard Variable" checked>
+                <label for="popupPretendardVariable">Pretendard Variable</label>
+                <p class="notice">안내: 한자 표기 등 일부 문제로 인해 나눔스퀘어 글꼴 사용자는 버전 3.0부터 Pretendard로 자동 변경됩니다.</p>
                 <p hidden>현재 미리보기 중입니다. 저장을 눌러야만 반영됩니다.</p>
             </section>
             <hr>
             <button id="saveForm">저장</button>
         </form>
-        <script src="./settings.js"></script>
+        <script src="./loadExtSettings.js"></script>
+        <script src="./saveExtSettings.js"></script>
+        <script src="./eventLoad.js"></script>
+        <script src="./serviceSettings.js"></script>
     </body>
 </html>

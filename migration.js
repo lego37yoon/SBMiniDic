@@ -18,11 +18,17 @@ async function updateFromMadoka() {
                     use: previousValues.enDicMode
                 }
             ],
-            additionalSettings: []
+            additionalOptions: []
         },
         translationSettings: {
-            current: "kakaodev",
-            provider: []
+            current: previousValues.translateProvider,
+            provider: {
+                kakaodev: {
+                    api: undefined,
+                    srcLang: "en",
+                    targetLang: "kr"
+                }
+            }
         },
         appearance: {
             size: previousValues.fontSize,
@@ -40,26 +46,19 @@ async function updateFromMadoka() {
     };
     
     if (previousValues.apiKey) {
-        newValues.translationSettings.provider.push(
-            {
-                company: "kakaodev",
-                api: previousValues.apiKey,
-                srcLang: previousValues.srcLang,
-                targetLang: previousValues.targetLang
-            }
-        );
+        newValues.translationSettings.provider.kakaodev = {
+            api: previousValues.apiKey,
+            srcLang: previousValues.srcLang,
+            targetLang: previousValues.targetLang
+        };
     }
 
     if (previousValues.googleApiKey) {
-        newValues.translationSettings.current = previousValues;
-        newValues.translationSettings.provider.push(
-            {
-                company: "google",
-                api: previousValues.googleApiKey,
-                srcLang: previousValues.srcLangGoogle,
-                targetLang: previousValues.targetLangGoogle
-            }
-        );
+        newValues.translationSettings.provider.google = {
+            api: previousValues.googleApiKey,
+            srcLang: previousValues.srcLangGoogle,
+            targetLang: previousValues.targetLangGoogle
+        };
     }
 
     if (previousValues.dragToFind) {
@@ -75,7 +74,7 @@ async function updateFromMadoka() {
     }
 
     if (previousValues.autoModeChange) {
-        newValues.dictionarySettings.additionalSettings.push("autoModeChange");
+        newValues.dictionarySettings.additionalOptions.push("autoModeChange");
     }
 
     switch (previousValues.fontMode) {
@@ -91,7 +90,7 @@ async function updateFromMadoka() {
             newValues.appearance = {
                 font: "Pretendard Variable",
                 type: "sans-serif",
-                size: 14,
+                size: 12,
                 feature: "ss05",
                 weight: {
                     header: 500,
@@ -108,6 +107,9 @@ async function updateFromMadoka() {
     }
 
     browser.storage.sync.set(newValues);
+    browser.storage.sync.remove([
+        "apiKey", "autoModeChange", "contextToFind", "dragToFind", "enDicMode", "fontMode", "fontSize", "googleApiKey", "krDicMode", "mode", "naverClientId", "naverClientSecret", "openNewTab", "srcLang", "srcLangGoogle", "srcLangNaver", "targetLang", "targetLangGoogle", "targetLangNaver", "translationProvider"
+    ])
 }
 
 function initializeDict() {
