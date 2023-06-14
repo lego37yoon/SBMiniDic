@@ -41,7 +41,7 @@ This software uses following open source software.
 
   You can download used file from these links below:
   - [purify.min.js](https://github.com/lego37yoon/SBMiniDic/blob/main/purify.min.js)
-  - [purify.min.js](https://github.com/lego37yoon/SBMiniDic/blob/main/purify.min.js.map)
+  - [purify.min.js source map](https://github.com/lego37yoon/SBMiniDic/blob/main/purify.min.js.map)
 
 - [NanumSquare Regular](https://hangeul.naver.com), [SIL OFL 1.1](https://help.naver.com/service/30016/contents/18088?osType=PC&lang=ko)
 - [RIDIBatang](https://ridicorp.com/ridibatang), SIL OFL 1.1
