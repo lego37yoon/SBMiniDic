@@ -44,6 +44,30 @@ async function updateFromMadoka() {
             }
         }
     };
+
+    switch(previousValues.krDicMode) {
+        case "kr":
+            newValues.dictionarySettings.detectMode[0].use = "kor";
+            break;
+        case "en":
+            newValues.dictionarySettings.detectMode[0].use = "eng";
+            break;
+        case "jp":
+            newValues.dictionarySettings.detectMode[0].use = "jpn";
+            break;
+        case "cn":
+            newValues.dictionarySettings.detectMode[0].use = "chn";
+            break;
+    }
+
+    switch(previousValues.enDicMode) {
+        case "kr":
+            newValues.dictionarySettings.detectMode[1].use = "eng";
+            break;
+        case "en":
+            newValues.dictionarySettings.detectMode[1].use = "ene";
+            break;
+    }
     
     if (previousValues.apiKey) {
         newValues.translationSettings.provider.kakaodev = {

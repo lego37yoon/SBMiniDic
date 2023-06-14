@@ -5,6 +5,7 @@ let i = 0;
 
 /* Mini Popup */
 let mouseFrame = document.createElement("div"); //popup div
+mouseFrame.setAttribute("class", "sinabroMiniDicPopup");
 mouseFrame.setAttribute("hidden", "true");
 let wordElement = document.createElement("p"); //word
 wordElement.setAttribute("class", "sinabroMiniDicWord");
@@ -12,7 +13,7 @@ wordElement.setAttribute("class", "sinabroMiniDicWord");
 let meaning = document.createElement("p"); //meaning
 meaning.setAttribute("class", "sinabroMiniDicMeaning");
 
-let readMore = document.createElement("a");
+let readMore = document.createElement("a"); //read-more link
 readMore.setAttribute("class", "sinabroMiniDicReadMore");
 
 mouseFrame.appendChild(wordElement);
@@ -22,21 +23,23 @@ mouseFrame.appendChild(readMore);
 document.body.appendChild(mouseFrame);
 
 function checkMode(e) {
-    let checkSavedValue = browser.storage.sync.get(["dragToFind", "mode", "openNewTab"]);
+    let checkSavedValue = browser.storage.sync.get(["platformMode", "useOptions"]);
     
     checkSavedValue.then((res) => {
-        if (res.openNewTab) {
+        if (res.useOptions.includes("openNewTab")) {
             readMore.setAttribute("target", "_blank");
             readMore.setAttribute("rel", "noopener noreferer");
         }
 
-        if (res.mode == "translate") {
-            if (res.dragToFind == true) {
-               showFrame("translate", e);
-            }
-        } else {
-            if (res.dragToFind == true) {
-               showFrame("dic", e);
+        if (res.useOptions.includes("dragToFind")) {
+            switch(res.platformMode) {
+                case "translate":
+                    showFrame("translate", e);
+                    break;
+                case "dic":
+                default:
+                    showFrame("dic", e);
+                    break;
             }
         }
     });
@@ -46,34 +49,15 @@ async function searchDic(keyword) {
     const suggestUrl = "https://suggest.dic.daum.net/language/v1/search.json";
     
     let searchMode = "lan";
-    let dictionaryMode = await browser.storage.sync.get(["krDicMode", "enDicMode", "autoModeChange"]);
+    let dicRes = await browser.storage.sync.get("dictionarySettings");
     let encodedKeyword = encodeURI(keyword);
 
     if (korean.test(keyword)) { //사전 자동 전환 기능 (한국어)
-        switch(dictionaryMode.krDicMode) {
-            case "kr":
-                searchMode = "kor";
-                break;
-            case "en":
-                searchMode = "eng";
-                break;
-            case "jp":
-                searchMode = "jpn";
-                break;
-            case "cn":
-                searchMode = "chn";
-                break;
-            default:
-                searchMode = "lan";
-        }
+        searchMode = dicRes.dictionarySettings.detectMode[0].use;
     }
 
     if (english.test(keyword)) { //사전 자동 전환 기능 (영어)
-        if (dictionaryMode.enDicMode = "kr") {
-            searchMode = "eng";
-        } else {
-            searchMode = "ene";
-        }
+        searchMode = dicRes.dictionarySettings.detectMode[1].use;
     }
 
     let dicResponse = await fetch(`${suggestUrl}?cate=${searchMode}&q=${encodedKeyword}`, {
@@ -104,7 +88,7 @@ async function searchDic(keyword) {
         }
     }
 
-    if (mouseFrame.style.display != "block" && dictionaryMode.autoModeChange) {
+    if (mouseFrame.style.display != "block" && dicRes.dictionarySettings.additionalOptions.includes("autoModeChange")) {
         searchTranslation(keyword);
     } else if (mouseFrame.style.display != "block") {
         meaning.textContent = `오류가 발생했습니다. 오류 코드 ${dicResponse.status} ${dicResponse.statusText} 검색을 시도한 내용과 오류코드를 포함하여 문의해주세요.`;
@@ -116,22 +100,22 @@ async function searchDic(keyword) {
 
 async function searchTranslation(keyword) {
     
-    const res = await browser.storage.sync.get(["translateProvider"]);
+    const res = await browser.storage.sync.get("translationSettings");
     let translateResult;
-    switch(res.translateProvider) {
+    switch(res.translationSettings.current) {
         case "naver":
             break;
         case "google":
-            translateResult = await translateGoogle(keyword);
+            translateResult = await translateGoogle(keyword, res.translationSettings.provider.google);
             break;
         case "kakaodev":
         default:
-            translateResult = await translateKakao(keyword);
+            translateResult = await translateKakao(keyword, res.translationSettings.provider.kakaodev);
             break;
     }
     
     wordElement.textContent = keyword;
-    switch(res.translateProvider) {
+    switch(res.translationSettings.current) {
         case "naver":
             break;
         case "google":
@@ -146,7 +130,7 @@ async function searchTranslation(keyword) {
                         translatedTexts += translateResult.data.translations[i].translatedText;
                     }
                 }
-                meaning.textContent = DOMPurify.sanitize(convertHTMLEntity(translatedTexts));
+                meaning.textContent = DOMPurify.sanitize(translatedTexts);
                 readMore.textContent = "출처 | Google 번역";
                 readMore.setAttribute("href", "https://translate.google.com");
                 break;
@@ -159,12 +143,7 @@ async function searchTranslation(keyword) {
                 readMore.textContent = "kakao DevTalk에 상세 원인 물어보기";
                 readMore.setAttribute("href", "https://devtalk.kakao.com/c/translation-api/109");    
             } else {
-                let translatedTexts = translateResult.translated_text[0][0];
-                if (translateResult.translated_text.length > 1) {
-                    for (i = 1; i < translateResult.translated_text.length; i++) {
-                        translatedTexts += translateResult.translated_text[i][0];
-                    }
-                }
+                let translatedTexts = translateResult.translated_text.join(" ");
                 meaning.textContent = DOMPurify.sanitize(translatedTexts);
                 readMore.textContent = "출처 | kakao i 번역";
                 readMore.setAttribute("href", "https://translate.kakao.com");
@@ -175,11 +154,10 @@ async function searchTranslation(keyword) {
     mouseFrame.style.display = "block";
 }
 
-async function translateKakao(keyword) {
+async function translateKakao(keyword, res) {
     const translateUrl = "https://dapi.kakao.com/v2/translation/translate";
     const detectUrl = "https://dapi.kakao.com/v3/translation/language/detect";    
 
-    const res = await browser.storage.sync.get(["srcLang", "targetLang", "apikey"]);
     let srcLang = "kr";
     let targetLang = "en";
     let encodedKeyword = encodeURI(keyword);
@@ -189,7 +167,7 @@ async function translateKakao(keyword) {
             method: 'GET',
             mode: 'cors',
             headers: {
-                'Authorization': `KakaoAK ${res.apikey}`
+                'Authorization': `KakaoAK ${res.api}`
             },
             redirect: 'follow'
         });
@@ -216,7 +194,7 @@ async function translateKakao(keyword) {
         method: 'GET',
         mode: 'cors',
         headers: {
-            'Authorization': `KakaoAK ${res.apikey}`
+            'Authorization': `KakaoAK ${res.api}`
         },
         redirect: 'follow'
     });
@@ -225,8 +203,9 @@ async function translateKakao(keyword) {
 }
 
 async function translateNaver(keyword) {
-    const papagoUrl = "https://openapi.naver.com/v1/papago/n2mt";
+    const papagoUrl = "https://sdicproxy.paperbox.pe.kr/api/papago";
     const detectUrl = "https://openapi.naver.com/v1/papago/detectLangs";
+    const token = "";
     let srcLang = "ko";
     let targetLang = "en";
 
@@ -235,7 +214,7 @@ async function translateNaver(keyword) {
 
     // To-Do : Detect Language
 
-    const response = await fetch(`${papagoUrl}`, {
+    const response = await fetch(`${papagoUrl}?token=${token}`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -245,18 +224,21 @@ async function translateNaver(keyword) {
             'User-Agent': 'curl/7.86.0'
         },
         redirect: 'follow',
-        body: `source=${srcLang}&target=${targetLang}&text=${keyword}`
+        body: `{
+            "source": ${srcLang},
+            "target": ${targetLang},
+            "text": ${keyword}
+        }`
     });
 
     return response.json();
 }
 
-async function translateGoogle(keyword) {
+async function translateGoogle(keyword, res) {
     const googleUrl = "https://translation.googleapis.com/language/translate/v2";
-    const res = await browser.storage.sync.get(["srcLangGoogle", "targetLangGoogle", "googleApiKey"]);
     let targetLang = "en";
 
-    const detectResult = await fetch(`${googleUrl}/detect?key=${res.googleApiKey}`, {
+    const detectResult = await fetch(`${googleUrl}/detect?key=${res.api}`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -268,10 +250,10 @@ async function translateGoogle(keyword) {
         }`
     });
 
-    const detectContents = await detectResult.json()
+    const detectContents = await detectResult.json();
     const detectLang = detectContents.data.detections[0][0].language;
     
-    if (detectLang == res.targetLangGoogle) {
+    if (detectLang === res.targetLang) {
         switch(detectLang) {
             case "ko":
                 targetLang = "en";
@@ -281,11 +263,11 @@ async function translateGoogle(keyword) {
                 break;
         }
     } else {
-        targetLang = res.targetLangGoogle;
+        targetLang = res.targetLang;
     }
     
-    if (res.srcLangGoogle == "auto") {
-        const response = await fetch(`${googleUrl}?key=${res.googleApiKey}`, {
+    if (res.srcLang === "auto") {
+        const response = await fetch(`${googleUrl}?key=${res.api}`, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -301,7 +283,7 @@ async function translateGoogle(keyword) {
         return response.json();
     }
 
-    const response = await fetch(`${googleUrl}?key=${res.googleApiKey}`, {
+    const response = await fetch(`${googleUrl}?key=${res.api}`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -310,7 +292,7 @@ async function translateGoogle(keyword) {
         redirect: 'follow',
         body: `{
             "q": "${keyword}",
-            "source": "${res.srcLangGoogle}",
+            "source": "${res.srcLang}",
             "target": "${targetLang}"
         }`
     });   
@@ -318,26 +300,14 @@ async function translateGoogle(keyword) {
     return response.json();
 }
 
-function convertHTMLEntity(text) {
-    const tempArea = document.createElement("textarea");
-    tempArea.innerHTML = text;
-
-    const sanitizedData = `${tempArea.value}`;
-    return sanitizedData;
-}
-
-function showFrame(mode, e) {
+async function showFrame(mode, e) {
     let userText = window.getSelection().toString().trim(); //글자 얻어내기
-    let customizedFont = browser.storage.sync.get(["fontSize", "fontMode"]);
-    
-    customizedFont.then((res) => {
-        mouseFrame.style.fontSize = res.fontSize + 'pt';
-        if (res.fontMode == "serif") {
-            mouseFrame.setAttribute("class", "sinabroMiniDicPopup sinabroMiniDicSerif");
-        } else {
-            mouseFrame.setAttribute("class", "sinabroMiniDicPopup sinabroMiniDicSansSerif");
-        }
-    });
+    const res = await browser.storage.sync.get("appearance");
+
+    mouseFrame.style.setProperty("--sinabro-custom-font-size", `${res.appearance.size}pt`);
+    mouseFrame.style.setProperty("--sinabro-custom-font-family", res.appearance.font);
+    mouseFrame.style.setProperty("--sinabro-custom-font-type", res.appearance.type)
+
 
     if (userText != "" && userText != " ") {
         mouseFrame.style.left = e.clientX + "px";

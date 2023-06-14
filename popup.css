@@ -10,14 +10,11 @@
     font-style: normal;
 }
 
-.sinabroMiniDicSansSerif {
-    font-family: 'NanumSquare', sans-serif !important;
-}
-
-.sinabroMiniDicSerif {
-    font-family: 'RIDIBatang', serif !important;
-}
-   
+@font-face {
+    font-family: 'Pretendard Variable';
+    src: url('moz-extension://__MSG_@@extension_id__/resources/PretendardVariable.woff2') format('woff2');
+    font-style: normal;
+}  
 
 .sinabroMiniDicPopup {
     display: none;
@@ -29,17 +26,32 @@
     z-index: 999;
 }
 
+.sinabroMiniDicWord, .sinabroMiniDicMeaning, .sinabroMiniDicReadMore {
+    font-family: 
+        var(--sinabro-custom-font-family, "Pretendard Variable"), 
+        var(--sinabro-custom-font-type, sans-serif) !important;
+    font-feature-settings: var(--sinabro-custom-font-feature, "ss05");
+    font-size: var(--sinabro-custom-font-size, 1em);
+    line-height: normal;
+}
+
 .sinabroMiniDicWord {
-    color: cornflowerblue;
+    color: var(--sinabro-custom-header-color, cornflowerblue);
     margin: 0 !important;
+
+    font-weight: var(--sinabro-custom-font-weight-header, 500);
 }
 
 .sinabroMiniDicMeaning {
-    color: black;
+    color: var(--sinabro-custom-meaning-color, black);
     margin: 3px 0 0 0 !important;
+
+    font-weight: var(--sinabro-custom-font-weight-meaning, 300);
 }
 
 .sinabroMiniDicReadMore {
-    color: gray;
+    color: var(--sinabro-custom-read-more-color, gray);
     margin-left: 5px;
+
+    font-weight: var(--sinabro-custom-font-weight-read-more, 300);
 }
