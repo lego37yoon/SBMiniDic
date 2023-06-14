@@ -130,7 +130,7 @@ async function searchTranslation(keyword) {
                         translatedTexts += translateResult.data.translations[i].translatedText;
                     }
                 }
-                meaning.textContent = DOMPurify.sanitize(translatedTexts);
+                meaning.textContent = DOMPurify.sanitize(convertHTMLEntity(translatedTexts));
                 readMore.textContent = "출처 | Google 번역";
                 readMore.setAttribute("href", "https://translate.google.com");
                 break;
@@ -298,6 +298,14 @@ async function translateGoogle(keyword, res) {
     });   
 
     return response.json();
+}
+
+function convertHTMLEntity(text) {
+    const tempArea = document.createElement("textarea");
+    tempArea.innerHTML = text;
+
+    const sanitizedData = `${tempArea.value}`;
+    return sanitizedData;
 }
 
 async function showFrame(mode, e) {
